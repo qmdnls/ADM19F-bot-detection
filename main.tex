@@ -1,0 +1,96 @@
+\documentclass[12pt]{article}
+
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{mdwlist}
+
+
+\setlength{\oddsidemargin}{0.0in}
+\setlength{\evensidemargin}{0.0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\headheight}{0.0in}
+\setlength{\topmargin}{0.0in}
+% \setlength{\textheight}{9.0in}
+\setlength{\textheight}{9in}
+\addtolength{\textheight}{-\topmargin}
+\addtolength{\textheight}{-\headheight}
+\addtolength{\textheight}{-\headsep}
+\addtolength{\textheight}{-\footskip}
+
+
+
+\begin{document}
+
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+\newcommand{\bit}{\begin{itemize*}}
+\newcommand{\eit}{\end{itemize*}}
+\newcommand{\goal}[1]{ {\noindent {$\Rightarrow$} \em {#1} } }
+\newcommand{\hide}[1]{}
+\newcommand{\comment}[1]{ {\footnotesize {#1} } }
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proof}{Proof}
+\newtheorem{defn}{Definition}
+\newtheorem{algo}{Algorithm}
+\newtheorem{observation}{Observation}
+
+\title{Catchy Title}
+
+
+\author{ {\em Björn Bebensee} \\
+	    Dept. of Computer Science and Engineering \\
+	    Seoul National University\\
+	    {\tt bebensee@snu.ac.kr}
+	 \and
+	 {\em Mary Thompson} \\
+	     Dept. of Biology \\
+	     Univ. of Pittsburgh\\
+	     {\tt mj@upitt.edu}
+        }
+
+
+\maketitle
+\begin{abstract}
+    \input{000abstract}
+\end{abstract}
+
+\section{Introduction}
+    \label{sec:intro}
+    \input{010intro}
+
+\section{Survey}
+    \label{sec:survey}
+    \input{020survey}
+
+% Progress report
+%\section{Proposed Method}
+%    \label{sec:proposed}
+%    \input{030method}
+
+%\section{Experiments}
+%    \label{sec:experiments}
+%    \input{040experiments}
+
+% Final report
+
+%\section{Conclusions}
+%    \label{sec:conclusions}
+%    \input{050conclusions}
+
+
+\bibliography{BIB/other}
+\bibliographystyle{plain}
+
+\newpage
+\appendix
+\section{Appendix}
+\input{099appendix}
+
+\newpage
+\pagenumbering{roman}
+\tableofcontents
+
+
+\end{document}
