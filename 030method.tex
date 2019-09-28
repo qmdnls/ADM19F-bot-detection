@@ -11,5 +11,12 @@ to remove spikes, and only then,  we use the $k$ strongest
 Daubechies-4 wavelet coefficients, to compare the two (spike-removed)
 sound clips.
 
+\noindent
+\textit{Logistic regression.} Given a set of $m$ trainings samples $S = \{ (x^{(i)}, y^{(i)}) \}_{i=1}^m$ where $x^{(i)}$ responds to the input features and $y^{(i)}$ in $\{ 0,1 \}$ to the labels, we can model logistic regression as
+$$
+p(y=1|x,\theta) = \frac{1}{1+\text{exp}(-\theta^T x)}
+$$
+with model parameters $\theta$.
+
 $\ldots$
 
