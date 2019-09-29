@@ -1,42 +1,42 @@
 Next we list the papers that each member read,
 along with their summary and critique.
-Table \ref{tab:symbols} gives a list of common symbols we used.
 
-\begin{table}[htb]
-\begin{center} 
-\begin{tabular}{|l | c | } \hline \hline 
-Symbol & Definition \\ \hline
-$N$ & number of sound-clips \\
-$D$ & average duration of a sound-clip \\
-$k$  & number of classes \\ \hline
-\end{tabular} 
-\end{center} 
-\caption{Symbols and definitions}
-\label{tab:symbols} 
- \end{table} 
+%Table \ref{tab:symbols} gives a list of common symbols we used.
+%\begin{table}[htb]
+%\begin{center} 
+%\begin{tabular}{|l | c | } \hline \hline 
+%Symbol & Definition \\ \hline
+%$N$ & number of sound-clips \\
+%$D$ & average duration of a sound-clip \\
+%$k$  & number of classes \\ \hline
+%\end{tabular} 
+%\end{center} 
+%\caption{Symbols and definitions}
+%\label{tab:symbols} 
+%\end{table} 
 
-\noindent\fbox{
-\parbox{0.97\textwidth}{FORMAT FOR PAPER SUMMARY (INCLUDE MAIN IDEA, HOW WE CAN USE IT, AND WHAT IS MISSING FROM THE PAPER):
+%\noindent\fbox{
+%\parbox{0.97\textwidth}{FORMAT FOR PAPER SUMMARY (INCLUDE MAIN IDEA, HOW WE CAN USE IT, AND WHAT IS MISSING FROM THE PAPER):
 
-\medskip
+%\medskip
 
-The first paper was the wavelet paper by Daubechies
-\cite{Daubechies92Ten}
-\begin{itemize*}
-\item {\em Main idea}: instead of using Fourier transform,
-      wavelet basis functions are localized in frequency {\em and} time.
-      It turns out that they fit real signals better,
-      in the sense they need fewer non-zero coefficients to reconstruct
-      them. Thus they achieve better compression.
-\item {\em Use for our project}:
-      it is extremely related to our sound-clip similarity
-      project, because we can use the top few wavelet coefficients
-      to compare two sound clips.
-\item {\em Shortcomings}:
-      The Daubechies wavelets require a wrap-around setting,
-      which may lead to non-intuitive results.
-\end{itemize*}
-}}%endpar%endfbox
+%The first paper was the wavelet paper by Daubechies
+%\cite{Daubechies92Ten}
+%\begin{itemize*}
+%\item {\em Main idea}: instead of using Fourier transform,
+%      wavelet basis functions are localized in frequency {\em and} time.
+%      It turns out that they fit real signals better,
+%      in the sense they need fewer non-zero coefficients to reconstruct
+%      them. Thus they achieve better compression.
+%\item {\em Use for our project}:
+%      it is extremely related to our sound-clip similarity
+%      project, because we can use the top few wavelet coefficients
+%      to compare two sound clips.
+%\item {\em Shortcomings}:
+%      The Daubechies wavelets require a wrap-around setting,
+%      which may lead to non-intuitive results.
+%\end{itemize*}
+%}}%endpar%endfbox
 
 \subsection{Papers read by Björn Bebensee}
 
@@ -52,6 +52,27 @@ This paper is closely related to the approach we want to take to classify accoun
 
 \paragraph{Shortcomings:}
 
+\subsubsection{Botnet detection using graph‐based feature clustering}
+
+\paragraph{Main idea:}
+In this paper Chowdhury et al.~\cite{chowdhury2017botnet} explore the use of graph-based features for clustering in computer networks to detect botnets. As much prior literature has focused on flow-based or rule-based detection, the authors suggest using clustering to first identify clusters of suspicious nodes. The authors are using a self-organizing map (SOM) for dimensionality reduction and clustering by assigning each node to a different cluster according to the output of the SOM. The features used for clustering are node in-degree, out-degree, in-degree weight (i.e. how many packets are received), out-degree weight (i.e. number of outgoing packets), clustering coefficient, node betweenness, and eigenvector centrality. Finally they are classifying nodes in each cluster (except the largest as it is unlikely to contain bots) starting from the smallest cluster using their own bot-search algorithm which only requires examination of few nodes for classification.
+Chowdhury et al. show that their approach performs better than SVM classification on the CTU-13 dataset (a dataset of botnet traffic) using the same graph features.
+
+\paragraph{Use for our project:}
+Although the approach presented in the paper operates on an entirely different set of data, it is very similar to our goal in its nature. The authors want to identify a set of bad actors in a network given interactions between devices and given the network structure. As we are attempting to classify users in a social network according to the structure and topology of the social graph, we aim to use a set of graph-based features, similar to the features used in the paper, to cluster groups of users which we may subsequently classify jointly.
+
+\paragraph{Shortcomings:}
+Calculating all given graph features for all nodes in the graph will not scale very well. For the CTU-13 dataset used by the authors the computation took 30 hours on a supercomputer cluster. This is not an acceptable amount of processing power and time to detect social bots in social networks in (near) real-time in order to prevent interactions with real users. However, as the CTU-13 dataset contains much data and information that is not contained or necessary for an application on social graphs, some of the ideas from these paper may still viable in our use-case. Further experimentation is required.
+
+\subsubsection{Aiding the detection of fake accounts in large scale social online services}
+
+\paragraph{Main idea:}
+\cite{cao2012aiding}
+
+\paragraph{Use for our project:}
+
+\paragraph{Shortcomings:}
+
 \subsubsection{Social Bots Detection on Mobile Social Networks}
 
 \paragraph{Main idea:}
@@ -63,5 +84,31 @@ This paper is closely related to the approach we want to take to classify accoun
 
 \subsection{Papers read by Nagmat Nazarov}
 
+\subsubsection{Bot Classification for Real-Life Highly Class-Imbalanced Dataset}
+
+\paragraph{Main idea:}
+Generally the researches on bot detection is based on particular botnet characteristics, but in this paper the authors develop three generic features to detect different types of bots regardless of their botnet characteristics. Sarah Harun, Tanveer Hossain Bhuiyan, Song Zhang, Hugh Medal and Linkan Bian~\cite{harun2017bot} suggest five classification models based on those features to classify bots from a large, real-life class-imbalanced network dataset. The authors think that the generalized bot detection methods perform better than the botnet specific methods. 
+The bot detection methodology is at first filtering out the unnecessary data and then apply feature extractor to the rest of data. Filtering : The authors filter the IPs which never act as a source and remove IPs which perform only single communication with other IP. After that the bots are extracted based on assumptions of bot behavior according to 1) Falling rate of communication frequency, 2) media communication frequency and 3) source bytes per packet for highest communication frequency.  To develop classification models using these features. The supervised learning algorithms like Quadratic discriminant analysis, Gaussian Naïve Bayes, Support Vector Machine, K Nearest neighbor and Random Forest are used. 
+\paragraph{Use for our project:}
+The classification results are analyzed according to 6 scenarios , as a result Quadratic discriminant analysis and Gaussian Naïve Bayes perform much better than others. These two supervised learning algorithms are closely related to the approach we want to take to classify accounts as bots or nonbot.  
+\paragraph{Shortcomings:}
+
+\subsubsection{Towards a language independent Twitter bot detector}
+
+\paragraph{Main idea:}
+\cite{lundberg2019towards}
+
+\paragraph{Use for our project:}
+
+\paragraph{Shortcomings:}
+
+\subsubsection{A network topology approach to bot classification}
+
+\paragraph{Main idea:}
+\cite{cornelissen2018network}
+
+\paragraph{Use for our project:}
+
+\paragraph{Shortcomings:}
 $\ldots$
 
