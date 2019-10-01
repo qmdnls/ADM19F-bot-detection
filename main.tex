@@ -18,7 +18,26 @@
 \addtolength{\textheight}{-\headsep}
 \addtolength{\textheight}{-\footskip}
 
+% bigger abstract margins
+\let\oldabstract\abstract
+\let\oldendabstract\endabstract
+\makeatletter
+\renewenvironment{abstract}
+{\renewenvironment{quotation}%
+               {\list{}{\addtolength{\leftmargin}{3em} % change this value to add or remove length to the the default
+                        \listparindent 1.5em%
+                        \itemindent    \listparindent%
+                        \rightmargin   \leftmargin%
+                        \parsep        \z@ \@plus\p@}%
+                \item\relax}%
+               {\endlist}%
+\oldabstract}
+{\oldendabstract}
+\makeatother
 
+% spacing in itemize environments
+\usepackage{enumitem}
+\setitemize{itemsep=1pt}
 
 \begin{document}
 

@@ -8,9 +8,9 @@
 % }
 Today people all around the world use online social networks (OSNs) not only for personal connections but also for entertainment, to share opinions, to read news and inform themselves and to exchange knowledge and information. With their rise in popularity OSNs in the past decade however, they have become a target for abuse by malicious actors who are spamming the network, attempting to scam users, distribute malware, boost a legitimate user's popularity or increase the visibility of certain content. Furthermore with the 2016 United States presidential election the focus has been on social media rather than traditional media for the first time and the concern over widespread \emph{fake news} influencing public opinion as well as social bots pushing state-actor agendas has been growing~\cite{allcott2017social,grinberg2019fake} with some recent research focusing on identifying fake news using data mining methods~\cite{shu2017fake}.
 
-Many OSNs spend a considerable amount of money and time in the form of manual labor on identifying and removing fake accounts. Our goal is to build on previous research and to improve the classification process for more effective and efficient identification of fake accounts. Unlike other approaches which focus on
+Many OSNs spend a considerable amount of money and time in the form of manual labor on identifying and removing fake accounts. Our goal is to build on previous research and to improve the classification process for more effective and efficient identification of fake accounts. Unlike other approaches which focus only on basic profile features~\cite{cresci2015fame,malhotra2012studying} or temporal patterns in account activity~\cite{chavoshi2017temporal,ferraz2015rsc,gurajala2015fake}, our approach belongs to a category of graph-based approaches to fake account identification.  
 
-Given the directed graph $G=(V,E)$ induced by the social network's structure as well as additional classification features $m_v$ for every $v \in V$, we want to identify all nodes $v \in V$ that are likely to correspond to fake accounts. We call this graph a social graph (see \ref{fig:social_graph}. It is however vital that the false-positive rate be kept low as suspensions of legitimate user accounts can degrade the experience enormously.
+Given the directed graph $G=(V,E)$ induced by the social network's structure as well as additional classification features $m_v$ for every $v \in V$, we want to identify all nodes $v \in V$ that are likely to correspond to fake accounts. We call this graph a social graph (figure \ref{fig:social_graph}). For social networks with bidirectional connections i.e. through friend requests an undirected graph may be used to describe the network structure. It is however vital for the classification task that the false-positive rate be kept low as suspensions of legitimate user accounts can degrade the experience enormously.
 
 
 \begin{figure}
@@ -20,29 +20,17 @@ Given the directed graph $G=(V,E)$ induced by the social network's structure as 
     \label{fig:social_graph}
 \end{figure}
 
-%As public diplomacy or people's diplomacy is broadly being popular, a lot of government-sponsored institutions have bigger chances at communicating directly with foreign publics to establish a dialogue designed to inform and influence with the aim that this foreign public supports or tolerates a government’s strategic objectives. As the international order has changed over the 20th century, so has the practice of public diplomacy. The biggest tool to influence via public diplomacy is social platforms, where we are getting used to bots that are trying to convince us to support some sort of ideas. On this paper we will concentrate on bot detection methods by analyzing the papers and coming to new decisions.
-%It has been estimated that around 5-10\text{\%} of all users are bots, and these accounts generate about 20-25\text{\%} of all tweets posted. ~\cite{sysomos} For research purposes, bots present a serious problem because they reduce data accuracy and may dramatically skew the results of analyses using social media. 
-%List your main contributions
 
-%The problem we want to solve is the following:
+% INCLUDE CONTRIBUTIONS HERE LATER
+
+%The contributions of this project are the following:
 %\bit
-%\item GIVEN: a collection of $N$ sound clips, of similar duration,
-%      and each having a class label among $k$=5 classes
-%\item FIND: a clip-to-clip similarity function
-%\item to MINIMIZE: the classification error, in the 1-nearest-neighbor
-      classifier.
+%\item our proposed {\em someMETHOD} is novel, combining wavelets
+%      with a spike-removal  preprocessing step
+%\item it is effective, achieving 90\% classification accuracy
+%\item it is scalable, being linear on the number of sound-clips $N$.
 %\eit
 
-%This is an important problem, because $\ldots$
-%millions of dollars $\ldots$
-%millions of human lives $\ldots$
+In this paper we propose a novel approach to identification of fake accounts in OSNs by exploiting differences between the ego networks of legitimate users and fake accounts as well as weak links between communities of real users and communities of fake accounts. We first obtain a labelled dataset of legitimate and fake accounts on Twitter. As Twitter's developer policy limits the ways in which scraped user data may be published, these datasets typically contain a list of user IDs which we will then have to scrape to construct the social graph. We will explore this social graph and run experiments to find predictive features based on which we develop a novel approach. Finally, we evaluate our approach in experiments against other popular approaches for fake account detection in OSNs.
 
-The contributions of this project are the following:
-\bit
-\item our proposed {\em someMETHOD} is novel, combining wavelets
-      with a spike-removal  preprocessing step
-\item it is effective, achieving 90\% classification accuracy
-\item it is scalable, being linear on the number of sound-clips $N$.
-\eit
-
-The rest of this paper is structured in the following way: first we do a short survey of related work and their approaches (Section \ref{sec:survey}), based on the findings in these papers we will explore a dataset of Twitter users and fake accounts and their social graph and propose our own method of classifying these accounts, we will test and evaluate our approach in experiments and compare it to other classification approaches.
+The rest of this paper is structured in the following way: first we do a short survey of related work and their approaches (Section \ref{sec:survey}), based on the findings in these papers we will explore a dataset of Twitter users and fake accounts and their social graph, propose our own classification method, and evaluate our approach in experiments.
