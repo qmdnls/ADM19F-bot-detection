@@ -10,8 +10,9 @@ try:
                 lines.append(line.strip())
     consumer_token = lines[0]
     consumer_secret = lines[1]
-except FileNotFoundError:
-     print("'%s' file not found" % filename)
+except FileNotFoundError as e:
+    print("File not found: ",  e.filename)
+    exit()
 
 # Set up tweepy
 auth = tweepy.AppAuthHandler(consumer_token, consumer_secret)
@@ -28,7 +29,7 @@ print(df)
 data = pd.DataFrame()
 
 # Use Twitter API to get IDs of all users followed by and following the users in the dataset
-for idx, user_id in enumerate(df["user_id"][0:2]):
+for idx, user_id in enumerate(df["user_id"]):
    
     # Print progress
     if (idx % 10 == 0):
