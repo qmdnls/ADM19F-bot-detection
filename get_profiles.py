@@ -49,7 +49,21 @@ for idx, user_ids in enumerate(grouper(df["user_id"], 100)):
 
     # Now iterate over the users and store retrieved data in dicts
     for user in users:
-        userdata = dict(user_id=user.id, screen_name=user.screen_name, followers=user.followers_count, following=user.friends_count)
+        userdata = dict(user_id=user.id,
+                screen_name=user.screen_name,
+                followers=user.followers_count,
+                following=user.friends_count,
+                name=user.name,
+                location=user.location,
+                url=user.url,
+                description=user.description,
+                protected=user.protected,
+                listed_count=user.listed_count,
+                favourites_count=user.favourites_count,
+                statuses_count=user.statuses_count,
+                created_at=user.created_at,
+                default_profile=user.default_profile,
+                default_profile_image=user.default_profile_image)
         data.append(userdata)
 
 # Make our lists of dicts into a dataframe and merge it with the dataset
