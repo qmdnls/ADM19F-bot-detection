@@ -38,9 +38,11 @@ for idx, user_id in enumerate(df["user_id"]):
     try:
         following = api.friends_ids(user_id=user_id)
         followers = api.followers_ids(user_id=user_id)
-  
-    # Handle exception in case the user does not exist
+
+    # Handle exception in case the user does not exist or user is protected
     except tweepy.error.TweepError as e:
+        if (e.reason == "Not authorized."):
+            continue
         print("Error: " + e)
 
     # Store retrieved data in dataframe, use list of lists because column needs to have the same length
