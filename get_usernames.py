@@ -29,31 +29,32 @@ api.wait_on_rate_limit_notify = True
 # Load dataset from tsv
 df = pd.read_csv("data-set-cresci-2018.tsv", sep="\t")
 
-# Create new dataframe to store retrieved data in
-users_df = pd.DataFrame()
-users_df["user_id"] = ""
-users_df["screen_name"] = ""
-users_df["followers"] = ""
-users_df["following"] = ""
+# Create new list to store retrieved data in
+data = []
 
 # Use Twitter API to get usernames, follower and following counts, save in Pandas dataframe
-for user_ids in grouper(df["user_id"][0:100], 100):
+for idx, user_ids in enumerate(grouper(df["user_id"], 100)):
     # Group of user ids now looks like: (user_id0, user_id1, ..., user_id99)
-    
+   
+    # Print progress
+    if (idx % 10 == 0):
+        print(str(round(idx*100*100/len(df["user_id"]))) + "% progress", end="\r", flush=True)
+
     try:
         users = api.lookup_users(user_ids=user_ids)
-    
+   
     # Handle exception in case the user does not exist
-    except tweepy.error.TweepError:
-        print("User_ID not found: '%s'" % id)
-    
-    # Now iterate over the users and modify dataframe accordingly
-    for idx,user in enumerate(users):
-        users_df.at[idx, "user_id"] = user.id
-        users_df.at[idx, "screen_name"] = user.screen_name
-        users_df.at[idx, "followers"] = user.followers_count
-        users_df.at[idx, "following"] = user.friends_count
+    except tweepy.error.TweepError as e:
+        print("Error: " + e)
 
+    # Now iterate over the users and store retrieved data in dicts
+    for user in users:
+        userdata = dict(user_id=user.id, screen_name=user.screen_name, followers=user.followers_count, following=user.friends_count)
+        data.append(userdata)
+
+# Make our lists of dicts into a dataframe and merge it with the dataset
+users_df = pd.DataFrame(data)
+users_df.to_csv("data_scraped.csv", index=None, header=True)
 df = pd.merge(df, users_df, on='user_id')
-df.to_csv("data.csv", index = None, header=True)
+df.to_csv("data.csv", index=None, header=True)
 print(df)
