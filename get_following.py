@@ -1,6 +1,9 @@
 import pandas as pd
 import tweepy
 from itertools import zip_longest
+from ssl import SSLError
+from requests.exceptions import Timeout, ConnectionError
+from urllib3.exceptions import ReadTimeoutError
 
 # Load Twitter API key, it's assumed our file contains the consumer token on the first line and its secret on the second line
 try:
@@ -35,15 +38,23 @@ for idx, user_id in enumerate(df["user_id"]):
     if (idx % 10 == 0):
         print(str(round(idx*100/len(df["user_id"]))) + "% progress", end="\r", flush=True)
 
-    try:
-        following = api.friends_ids(user_id=user_id)
-        followers = api.followers_ids(user_id=user_id)
-
-    # Handle exception in case the user does not exist or user is protected
-    except tweepy.error.TweepError as e:
-        if (e.reason == "Not authorized."):
+    # We attempt to connect up to 50 times in case of disconnects, resets etc.
+    for attempt in range(50):
+        # Get following and followers for user
+        try:
+            following = api.friends_ids(user_id=user_id)
+            followers = api.followers_ids(user_id=user_id)
+        # Handle exception in case the user does not exist or user is protected
+        except tweepy.error.TweepError as e:
+            if (e.reason == "Not authorized."):
+                continue
+            print("Error: " + e)
+        # Handle exception in case of connection timeouts or resets
+        except (Timeout, SSLError, ReadTimeoutError, ConnectionError) as e:
             continue
-        print("Error: " + e)
+        # If successful, break and do not retry
+        else:
+            break
 
     # Store retrieved data in dataframe, use list of lists because column needs to have the same length
     data["user_id"] = user_id
