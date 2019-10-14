@@ -51,6 +51,8 @@ for idx, user_id in enumerate(df["user_id"]):
             print("Error: " + e)
         # Handle exception in case of connection timeouts or resets
         except (Timeout, SSLError, ReadTimeoutError, ConnectionError) as e:
+            print("Error:", e)
+            print("Reconnecting...", attempt)
             continue
         # If successful, break and do not retry
         else:
