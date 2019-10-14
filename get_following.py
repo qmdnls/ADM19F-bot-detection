@@ -65,6 +65,9 @@ for idx, user_id in enumerate(df["user_id"]):
     data["following_list"] = [following]
     data["followers_list"] = [followers]
 
+    if (idx % 10 == 0):
+        data.to_csv("data_following_progress.csv", index=None, header=True)
+
     # Wait one minute to avoid rate limit
     time.sleep(63)
 
