@@ -26,7 +26,7 @@ api.wait_on_rate_limit_notify = True
 
 # Load preprocessed dataset from csv, engine='python' needed because there's a buffer overflow in pandas...
 df = pd.read_csv("data.csv", encoding='utf8', engine='python')
-
+df_length = len(df["user_id"])
 print(df)
 
 # Create dataframe to store retrieved data in
@@ -36,8 +36,9 @@ data = pd.DataFrame()
 for idx, user_id in enumerate(df["user_id"]):
    
     # Print progress
-    if (idx % 10 == 0):
-        print(str(round(idx*100/len(df["user_id"]))) + "% progress", end="\r", flush=True)
+    #if (idx % 10 == 0):
+        #print(str(round(idx*100/len(df["user_id"]))) + "% progress", end="\r", flush=True)
+    print(idx, "of", df_length, "rows processed", end="\r", flush=True)
 
     # We attempt to connect up to 50 times in case of disconnects, resets etc.
     for attempt in range(50):
