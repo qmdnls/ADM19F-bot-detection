@@ -50,7 +50,7 @@ for idx, user_id in enumerate(df["user_id"]):
         except tweepy.error.TweepError as e:
             if (e.reason == "Not authorized."):
                 continue
-            print("Error: " + e)
+            print("Error: ", e)
         # Handle exception in case of connection timeouts or resets
         except (Timeout, SSLError, ReadTimeoutError, ConnectionError) as e:
             print("Error:", e)
@@ -66,7 +66,7 @@ for idx, user_id in enumerate(df["user_id"]):
     data["followers_list"] = [followers]
 
     # Wait one minute to avoid rate limit
-    time.sleep(60)
+    time.sleep(63)
 
 # Merge retrieved data with the dataset
 data.to_csv("data_following_scraped.csv", index=None, header=True)
