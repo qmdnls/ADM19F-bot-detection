@@ -63,6 +63,9 @@ for idx, user_id in enumerate(df["user_id"]):
     data["following_list"] = [following]
     data["followers_list"] = [followers]
 
+    # Wait one minute to avoid rate limit
+    time.sleep(60000)
+
 # Merge retrieved data with the dataset
 data.to_csv("data_following_scraped.csv", index=None, header=True)
 df = pd.merge(df, data, on='user_id')
