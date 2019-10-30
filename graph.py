@@ -1,12 +1,16 @@
+import numpy as np
 import pandas as pd
 import networkx as nx
 import ast
 import os.path
+import statistics
+    
+# Load the dataset
+def load_dataset(filename):
+    return pd.read_csv(filename, encoding='utf8', engine='python')
 
 # Given a dataset of users with UIDs, and lists of following/followers, create the social graph
-def graph_from_data(dataset):
-    # Load the dataset
-    df = pd.read_csv(dataset, encoding='utf8', engine='python')
+def graph_from_data(df):
     df_length = len(df)
 
     # Create (directed) user graph
@@ -35,10 +39,22 @@ def graph_from_data(dataset):
             G.add_node(following_id)
             G.add_edge(uid, following_id)
     
+    attributes = df.set_index('user_id').T.to_dict()
+    nx.set_node_attributes(G, attributes)
+
     print("\nDone.")
 
-    # Return the generated graph
+    # Return the generated graph and a list of users in the dataset
     return G
+
+# Load the dataset, we'll assume it is stored in dataset.csv
+df = load_dataset("dataset.csv")
+
+# List of attributes
+attributes = ["label", "screen_name", "followers", "following", "name", "location", "url", "description", "protected", "listed_count", "favourites_count", "statuses_count", "created_at", "default_profile", "default_profile_image"]
+
+# Obtain a list of all users
+users = df['user_id']
 
 # Check whether we have a graph saved in the file "user.graph" and load it, otherwise create from dataset.csv
 if (os.path.exists("user.graph")):
@@ -46,9 +62,172 @@ if (os.path.exists("user.graph")):
     G = nx.read_gpickle("user.graph")
 else:
     print("Creating graph from dataset...")
-    G = graph_from_data("dataset.csv")
+    G = graph_from_data(df)
     print("Writing to 'user.graph'...")
     nx.write_gpickle(G, "user.graph")
 
+# Check whether undirected version is saved, otherwise create the file and save it
+if not (os.path.exists("undirected.graph")):
+    F = G.to_undirected()
+    nx.write_gpickle(F, "undirected.graph")
+
+#print(G.nodes[2391736411]['label'])
+#print(G.nodes[2391736411]['screen_name'])
+
+U = G.subgraph(users)
+
+#----------------------------------------------------------------------
+#indegrees = sorted(G.in_degree, key=lambda tup: tup[1], reverse=True)
+#outdegrees = sorted(G.out_degree, key=lambda tup: tup[1], reverse=True)
+#print(nx.info(U))
+#humans = [attr['statuses_count'] for node,attr in U.nodes(data=True) if attr['label'] == 'human']
+#bots = [attr['statuses_count'] for node,attr in U.nodes(data=True) if attr['label'] == 'bot']
+#----------------------------------------------------------------------
+
+humans = [node for node,attr in U.nodes(data=True) if attr['label'] == 'human']
+bots = [node for node,attr in U.nodes(data=True) if attr['label'] == 'bot']
+
+#----------------------------------------------------------------------
+#print("ind")
+#ind = nx.in_degree_centrality(G)
+#print("outd")
+#outd = nx.out_degree_centrality(G)
+
+#h_ind = []
+#for h in humans:
+#    h_ind.append(ind[h])
+#
+#b_ind = []
+#for b in bots:
+#    b_ind.append(ind[b])
+
+#h_outd = []
+#for h in humans:
+#    h_outd.append(outd[h])
+
+#b_outd = []
+#for b in bots:
+#    b_outd.append(outd[b])
+
+#print("Median human in-degree centrality", statistics.median(h_ind))
+#print("Median bot in-degree centrality", statistics.median(b_ind))
+#print("Median human out-degree centrality", statistics.median(h_outd))
+#print("Median bot in-degree centrality", statistics.median(b_outd))
+
+
+#print("ev")
+#ev = nx.eigenvector_centrality_numpy(G)
+
+#h_ev = []
+#for h in humans:
+#    h_ev.append(ev[h])
+
+#b_ev = []
+#for b in bots:
+#    b_ev.append(ev[b])
+
+#print("Median human eigenvector centrality", statistics.median(h_ev))
+#print("Median bot eigenvector centrality", statistics.median(b_ev))
+#----------------------------------------------------------------------
+
+#----------------------------------------------------------------------
+## NEED STATISTICS FOR ALL 4M USERS FROM TWITTER API TO USE THIS CODE
+#neighbor_followers = []
+#neighbor_following = []
+#neighbor_ratio = []
+#for h in humans:
+#    followers_neighbors = []
+#    following_neighbors = []
+#    friend_ratio = []
+#    for s in G.successors(h):
+#        followers = s['followers']
+#        following = s['following']
+#        ratio = followers/following
+#        followers_list.append(followers)
+#        following_list.append(following)
+#        friend_ratio.append(ratio)
+#    neighbor_followers.append(statistics.median(followers_neighbors))
+#    neighbor_following.append(statistics.median(following_neighbors))
+#    neighbor_ratio.append(statistics.median(friend_ratio))
+#----------------------------------------------------------------------
+
+ind_s = []
+outd_s = []
+ind_p = []
+outd_p = []
+for h in humans:
+    indegree_succ = []
+    outdegree_succ = []
+    indegree_pre = []
+    outdegree_pre = []
+    for s in G.successors(h):
+        indegree_succ.append(G.in_degree(s))
+        outdegree_succ.append(G.out_degree(s))
+    for p in G.predecessors(h):
+        indegree_pre.append(G.in_degree(p))
+        outdegree_pre.append(G.out_degree(p))
+
+    if (len(indegree_succ) > 0):
+        ind_s.append(statistics.mean(indegree_succ))
+    else:
+        ind_s.append(0)
+    if (len(outdegree_succ) > 0):
+        outd_s.append(statistics.mean(outdegree_succ))
+    else:
+        outd_s.append(0)
+
+    if (len(indegree_pre) > 0):
+        ind_p.append(statistics.mean(indegree_pre))
+    else:
+        ind_p.append(0)
+    if (len(outdegree_pre) > 0):
+        outd_p.append(statistics.mean(outdegree_pre))
+    else:
+        outd_p.append(0)
+    
+print("Median mean neighbor in-degree of successors human",statistics.median(ind_s))
+print("Median mean neighbor out-degree of successors human",statistics.median(outd_s))
+print("Median mean neighbor in-degree of predecessors human",statistics.median(ind_p))
+print("Median mean neighbor out-degree of successors human",statistics.median(outd_p))
+
+ind_s = []
+outd_s = []
+ind_p = []
+outd_p = []
+for b in bots:
+    indegree_succ = []
+    outdegree_succ = []
+    indegree_pre = []
+    outdegree_pre = []
+    for s in G.successors(b):
+        indegree_succ.append(G.in_degree(s))
+        outdegree_succ.append(G.out_degree(s))
+    for p in G.predecessors(b):
+        indegree_pre.append(G.in_degree(p))
+        outdegree_pre.append(G.out_degree(p))
+
+    if (len(indegree_succ) > 0):
+        ind_s.append(statistics.mean(indegree_succ))
+    else:
+        ind_s.append(0)
+    if (len(outdegree_succ) > 0):
+        outd_s.append(statistics.mean(outdegree_succ))
+    else:
+        outd_s.append(0)
+
+    if (len(indegree_pre) > 0):
+        ind_p.append(statistics.mean(indegree_pre))
+    else:
+        ind_p.append(0)
+    if (len(outdegree_pre) > 0):
+        outd_p.append(statistics.mean(outdegree_pre))
+    else:
+        outd_p.append(0)
+    
+print("Median mean neighbor in-degree of successors bots",statistics.median(ind_s))
+print("Median mean neighbor out-degree of successors bots",statistics.median(outd_s))
+print("Median mean neighbor in-degree of predecessors bots",statistics.median(ind_p))
+print("Median mean neighbor out-degree of successors bots",statistics.median(outd_p))
+
 # Print some general stats
-print(G.number_of_nodes(), G.number_of_edges())
+print("Nodes:", G.number_of_nodes(), "Edges:", G.number_of_edges(), "Triangles:", "???")
