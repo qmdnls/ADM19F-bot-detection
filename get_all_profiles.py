@@ -87,7 +87,7 @@ for idx, user_ids in enumerate(grouper(ids, 100)):
                 default_profile_image=user.default_profile_image)
         data.append(userdata)
 
-    if (idx % 250 == 0):
+    if (idx % 1000 == 0):
         pd.DataFrame(data).to_csv("user_data_progress.csv", index=None, header=True)
 
 # Make our lists of dicts into a dataframe and merge it with the dataset
