@@ -2,6 +2,9 @@ import pandas as pd
 import tweepy
 import ast
 from itertools import zip_longest
+from ssl import SSLError
+from requests.exceptions import Timeout, ConnectionError
+from urllib3.exceptions import ReadTimeoutError
 
 # Helper method that returns a list in chunks
 def grouper(iterable, n, fillvalue=None):
