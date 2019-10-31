@@ -57,7 +57,7 @@ for idx, user_ids in enumerate(grouper(ids, 100)):
             
         # Handle exception in case the user does not exist etc.
         except tweepy.error.TweepError as e:
-            print("Error: " + e, attempt)
+            print("Error:", e, attempt)
             continue
         # Handle exception in case of connection timeouts or resets
         except (Timeout, SSLError, ReadTimeoutError, ConnectionError) as e:
