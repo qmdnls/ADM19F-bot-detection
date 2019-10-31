@@ -49,8 +49,7 @@ for idx, user_ids in enumerate(grouper(ids, 100)):
     # Group of user ids now looks like: (user_id0, user_id1, ..., user_id99)
    
     # Print progress
-    if (idx % 10 == 0):
-        print(idx*100, "of", ids_length, "rows processed", "(" + str(round(100*100*idx/ids_length)) + "%)" ,end="\r", flush=True)
+    print(idx*100, "of", ids_length, "rows processed", "(" + str(round(100*100*idx/ids_length)) + "%)" ,end="\r", flush=True)
 
     for attempt in range(10):
         try:
