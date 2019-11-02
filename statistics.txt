@@ -27,11 +27,32 @@ Median bot in-degree centrality: 5.2047539354987855e-06
 Median human eigenvector centrality: 3.587979258306514e-05
 Median bot eigenvector centrality: 3.7043571880599646e-06
 
-Median mean neighbor in-degree of successors human 24.006922827996426
-Median mean neighbor out-degree of successors human 0.8903955830603083
-Median mean neighbor in-degree of predecessors human 1.2175176137453212
-Median mean neighbor out-degree of successors human 3.1287564719105267
+Median mean neighbor in-degree of successors human 23.975508096344655
+Median mean neighbor out-degree of successors human 0.8851648351648351
+Median mean neighbor in-degree of predecessors human 1.214980720469803
+Median mean neighbor out-degree of successors human 3.1275353999234596
 Median mean neighbor in-degree of successors bots 11
 Median mean neighbor out-degree of successors bots 0.2222222222222222
 Median mean neighbor in-degree of predecessors bots 0.75
-Median mean neighbor out-degree of successors bots 7.086956521739131
+Median mean neighbor out-degree of successors bots 7.093220338983051
+Nodes: 4600995 Edges: 8494965
+Human: mean in-degree 576.833607365998
+Bots: mean in-degree 113.79768868597517
+Human: mean out-degree 503.1655705360079
+Bots: mean out-degree 163.16878299329434
+Human: average in-degree 166.0
+Bots: average in-degree 18
+Human: average out-degree 202.0
+Bots: average out-degree 24
+
+# Real values, surprisingly high?
+# Skewed distribution! Maybe power law?
+Median mean neighbor in-degree of successors human 1220.0
+Median mean neighbor out-degree of successors human 348.5
+Median mean neighbor in-degree of predecessors human 256.0
+Median mean neighbor out-degree of predecessors human 540.25
+Median mean neighbor in-degree of successors bots 311838.5
+Median mean neighbor out-degree of successors bots 844.7
+Median mean neighbor in-degree of predecessors bots 4369.272727272727
+Median mean neighbor out-degree of predecessors bots 3455.09375
+
