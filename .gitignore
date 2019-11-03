@@ -1,6 +1,6 @@
 api.txt
 *.swp
-*.data
+*.gexf
 *.graph
 *.csv
 *.tsv
