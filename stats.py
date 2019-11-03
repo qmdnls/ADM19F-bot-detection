@@ -194,12 +194,29 @@ followers = nx.get_node_attributes(G, 'followers')
 print("Nodes:", G.number_of_nodes(), "Edges:", G.number_of_edges())
 
 #rep = [h_rep_s, h_rep_p, b_rep_s, b_rep_p]
-centrality = nx.eigenvector_centrality_numpy(G)
+in_degrees = dict(G.out_degree())
+h_in = { h : in_degrees[h] for h in humans }
+b_in = { b: in_degrees[b] for b in bots }
+h_in_values = sorted(set(h_in.values()))
+b_in_values = sorted(set(b_in.values()))
+h_count = Counter(h_in.values())
+b_count = Counter(b_in.values())
+h_in_hist = []
+for x in h_in_values:
+    h_in_hist.append(h_count[x])
+b_in_hist = []
+for x in b_in_values:
+    b_in_hist.append(b_count[x])
+plt.figure()
+plt.grid(True)
+plt.loglog(h_in_values, h_in_hist, 'ro-', color="blue", marker="x")
+plt.loglog(b_in_values, b_in_hist, 'ro-', color="red", marker="v")
+plt.xlabel('Degree')
+plt.ylabel('Count')
+plt.savefig('fig/out.png')
 
-h_centrality = [centrality[h] for h in humans]
-b_centrality = [centrality[b] for b in bots]
-c = [h_centrality, b_centrality]
+data = [h_in_values, h_in_hist, b_in_values, b_in_hist]
 
-with open('centrality.data', 'wb') as filehandle:
+with open('outdegreescatter.data', 'wb') as filehandle:
     # store the data as binary data stream
-    pickle.dump(c, filehandle)
+    pickle.dump(data, filehandle)
