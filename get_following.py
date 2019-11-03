@@ -25,7 +25,7 @@ api.wait_on_rate_limit = True
 api.wait_on_rate_limit_notify = True
 
 # Load preprocessed dataset from csv, engine='python' needed because there's a buffer overflow in pandas...
-df = pd.read_csv("data.csv", encoding='utf8', engine='python')
+df = pd.read_csv("data/data.csv", encoding='utf8', engine='python')
 df_length = len(df["user_id"])
 print(df)
 
@@ -77,13 +77,13 @@ for idx, user_id in enumerate(df["user_id"]):
     data.at[idx,"followers_list"] = [followers]
 
     if (idx % 10 == 0):
-        data.to_csv("data_following_progress.csv", index=None, header=True)
+        data.to_csv("data/data_following_progress.csv", index=None, header=True)
 
     # Wait one minute to avoid rate limit
     time.sleep(61)
 
 # Merge retrieved data with the dataset
-data.to_csv("data_following_scraped.csv", index=None, header=True)
+data.to_csv("data/data_following_scraped.csv", index=None, header=True)
 df = pd.merge(df, data, on='user_id')
-df.to_csv("data_following.csv", index=None, header=True)
+df.to_csv("data/data_following.csv", index=None, header=True)
 print(df)

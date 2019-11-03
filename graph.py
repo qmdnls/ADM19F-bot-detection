@@ -46,7 +46,7 @@ def graph_from_data(G, chunk, length):
 # List of attributes
 attributes = ["label", "screen_name", "followers", "following", "name", "location", "url", "description", "protected", "listed_count", "favourites_count", "statuses_count", "created_at", "default_profile", "default_profile_image"]
 
-# Check whether we have a graph saved in the file "user.graph" and load it, otherwise create from dataset.csv
+# Check whether we have a graph saved in the file "user.graph" and load it, otherwise create from users.csv
 if (os.path.exists("user.graph")):
     print("Reading graph from file...")
     G = nx.read_gpickle("user.graph")
@@ -56,10 +56,10 @@ else:
     G = nx.DiGraph()
     
     # Get total file length to calculate progress
-    length = sum(1 for row in open('users.csv', 'r'))
+    length = sum(1 for row in open('data/users.csv', 'r'))
 
     # Load the dataset in chunks, we'll assume it is stored in users.csv
-    for chunk in load_dataset("users.csv"):
+    for chunk in load_dataset("data/users.csv"):
         G = graph_from_data(G, chunk, length)
     
     print("Writing to 'user.graph'...")

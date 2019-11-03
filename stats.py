@@ -31,7 +31,7 @@ def plotvs(data1, data2, xlabel, filename):
 # List of attributes
 attributes = ["label", "screen_name", "followers", "following", "name", "location", "url", "description", "protected", "listed_count", "favourites_count", "statuses_count", "created_at", "default_profile", "default_profile_image"]
 
-# Check whether we have a graph saved in the file "user.graph" and load it, otherwise create from dataset.csv
+# Check whether we have a graph saved in the file "user.graph" and load it
 if (os.path.exists("user.graph")):
     print("Reading graph from file...")
     G = nx.read_gpickle("user.graph")
@@ -110,7 +110,7 @@ for node in a:
 #    neighbor_ratio.append(statistics.median(friend_ratio))
 #----------------------------------------------------------------------
 
-df = pd.read_csv("users.csv", encoding="utf8")
+df = pd.read_csv("data/users.csv", encoding="utf8")
 df.set_index("user_id")
 
 humans = [node for node,attr in G.nodes(data=True) if attr['label'] == 'human']

@@ -27,7 +27,7 @@ api.wait_on_rate_limit = True
 api.wait_on_rate_limit_notify = True
 
 # Load dataset from tsv
-df = pd.read_csv("data-set-cresci-2018.tsv", sep="\t")
+df = pd.read_csv("data/data-set-cresci-2018.tsv", sep="\t")
 
 # Create new list to store retrieved data in
 data = []
@@ -68,7 +68,7 @@ for idx, user_ids in enumerate(grouper(df["user_id"], 100)):
 
 # Make our lists of dicts into a dataframe and merge it with the dataset
 users_df = pd.DataFrame(data)
-users_df.to_csv("data_scraped.csv", index=None, header=True)
+users_df.to_csv("data/data_scraped.csv", index=None, header=True)
 df = pd.merge(df, users_df, on='user_id')
-df.to_csv("data.csv", index=None, header=True)
+df.to_csv("data/data.csv", index=None, header=True)
 print(df)

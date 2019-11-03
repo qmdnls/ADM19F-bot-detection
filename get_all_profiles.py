@@ -33,7 +33,7 @@ api.wait_on_rate_limit_notify = True
 print("Reading data...")
 
 # Load dataset from tsv
-df = pd.read_csv("dataset.csv", encoding="utf8", engine="python")
+df = pd.read_csv("data/dataset.csv", encoding="utf8", engine="python")
 following = [user_id for sublist in df['following_list'] for user_id in ast.literal_eval(sublist)[0]]
 followers = [user_id for sublist in df['followers_list'] for user_id in ast.literal_eval(sublist)[0]]
 ids = list(set(following + followers))
@@ -88,9 +88,9 @@ for idx, user_ids in enumerate(grouper(ids, 100)):
         data.append(userdata)
 
     if (idx % 1000 == 0):
-        pd.DataFrame(data).to_csv("user_data_progress.csv", index=None, header=True)
+        pd.DataFrame(data).to_csv("data/user_data_progress.csv", index=None, header=True)
 
 # Make our lists of dicts into a dataframe and merge it with the dataset
 users_df = pd.DataFrame(data)
-users_df.to_csv("user_data.csv", index=None, header=True)
+users_df.to_csv("data/user_data.csv", index=None, header=True)
 print(df)
