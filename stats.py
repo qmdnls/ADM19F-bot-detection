@@ -119,75 +119,87 @@ bots = [node for node,attr in G.nodes(data=True) if attr['label'] == 'bot']
 following = nx.get_node_attributes(G, 'following')
 followers = nx.get_node_attributes(G, 'followers')
 
-h_rep_s = []
-h_rep_p = []
-for h in humans:
-    rep_succ = []
-    rep_pre = []
-    for s in G.successors(h):
-        a = followers[s]
-        b = following[s]
-        if (a == 0 and b == 0):
-            rep_succ.append(0)
-        else:
-            rep_succ.append(a/(a+b))
-    for p in G.predecessors(h):
-        a = followers[p]
-        b = following[p]
-        if (a == 0 and b == 0):
-            rep_pre.append(0)
-        else:
-            rep_pre.append(a/(a+b))
-
-    if (len(rep_succ) > 0):
-        h_rep_s.append(statistics.median(rep_succ))
-    else:
-        h_rep_s.append(0) 
-
-    if (len(rep_pre) > 0):
-        h_rep_p.append(statistics.median(rep_pre))
-    else:
-        h_rep_p.append(0)
+#h_rep_s = []
+#h_rep_p = []
+#for h in humans:
+#    rep_succ = []
+#    rep_pre = []
+#    for s in G.successors(h):
+#        a = followers[s]
+#        b = following[s]
+#        if (a == 0 and b == 0):
+#            rep_succ.append(0)
+#        else:
+#            rep_succ.append(a/(a+b))
+#    for p in G.predecessors(h):
+#        a = followers[p]
+#        b = following[p]
+#        if (a == 0 and b == 0):
+#            rep_pre.append(0)
+#        else:
+#            rep_pre.append(a/(a+b))
+#
+#    if (len(rep_succ) > 0):
+#        h_rep_s.append(statistics.median(rep_succ))
+#    else:
+#        h_rep_s.append(0) 
+#
+#    if (len(rep_pre) > 0):
+#        h_rep_p.append(statistics.median(rep_pre))
+#    else:
+#        h_rep_p.append(0)
     
-b_rep_s = []
-b_rep_p = []
-for b in bots:
-    rep_succ = []
-    rep_pre = []
-    for s in G.successors(b):
-        a = followers[s]
-        c = following[s]
-        if (a == 0 and c == 0):
-            rep_succ.append(0)
-        else:
-            rep_succ.append(a/(a+c))
-    for p in G.predecessors(b):
-        a = followers[p]
-        c = following[p]
-        if (a == 0 and c == 0):
-            rep_pre.append(0)
-        else:
-            rep_pre.append(a/(a+c))
+#b_rep_s = []
+#b_rep_p = []
+#for b in bots:
+#    rep_succ = []
+#    rep_pre = []
+#    for s in G.successors(b):
+#        a = followers[s]
+#        c = following[s]
+#        if (a == 0 and c == 0):
+#            rep_succ.append(0)
+#        else:
+#            rep_succ.append(a/(a+c))
+#    for p in G.predecessors(b):
+#        a = followers[p]
+#        c = following[p]
+#        if (a == 0 and c == 0):
+#            rep_pre.append(0)
+#        else:
+#            rep_pre.append(a/(a+c))
+#
+#    if (len(rep_succ) > 0):
+#        b_rep_s.append(statistics.median(rep_succ))
+#    else:
+#        b_rep_s.append(0) 
+#
+#    if (len(rep_pre) > 0):
+#        b_rep_p.append(statistics.median(rep_pre))
+#    else:
+#        b_rep_p.append(0)
 
-    if (len(rep_succ) > 0):
-        b_rep_s.append(statistics.median(rep_succ))
-    else:
-        b_rep_s.append(0) 
-
-    if (len(rep_pre) > 0):
-        b_rep_p.append(statistics.median(rep_pre))
-    else:
-        b_rep_p.append(0)
+#h_coeff_list = []
+#length = len(humans)
+#for idx,h in enumerate(humans):
+#    print(idx, "of", length, "rows processed", "(" + str(round(100*idx/length)) + "%)", end="\r", flush=True)
+#    h_coeff_list.append(nx.clustering(G,h))
+#b_coeff_list = []
+#length = len(bots)
+#for idx,b in enumerate(bots):
+#    print(idx, "of", length, "rows processed", "(" + str(round(100*idx/length)) + "%)", end="\r", flush=True)
+#    b_coeff_list.append(nx.clustering(G,b))
  
 # Print some general stats
 print("Nodes:", G.number_of_nodes(), "Edges:", G.number_of_edges())
 
-# Plot humans against bots
-plotvs(b_rep_s, h_rep_s, "Reputation", "reputation_succ.png")
-plotvs(b_rep_p, h_rep_p, "Reputation", "reputation_pre.png")
+#rep = [h_rep_s, h_rep_p, b_rep_s, b_rep_p]
+centrality = nx.eigenvector_centrality_numpy(G)
 
-rep = [h_rep_s, h_rep_p, b_rep_s, b_rep_p]
+h_centrality = [centrality[h] for h in humans]
+b_centrality = [centrality[b] for b in bots]
+c = [h_centrality, b_centrality]
 
-with open('reputation.data', 'wb') as filehandle:
+with open('centrality.data', 'wb') as filehandle:
     # store the data as binary data stream
-    pickle.dump(rep, filehandle)
+    pickle.dump(c, filehandle)
