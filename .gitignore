@@ -1,5 +1,6 @@
 api.txt
 *.swp
+*.data
 *.graph
 *.csv
 *.tsv
