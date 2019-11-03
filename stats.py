@@ -46,19 +46,6 @@ for node in a:
     G.remove_node(node)
 
 
-#U = G.subgraph(users)
-
-#----------------------------------------------------------------------
-#indegrees = sorted(G.in_degree, key=lambda tup: tup[1], reverse=True)
-#outdegrees = sorted(G.out_degree, key=lambda tup: tup[1], reverse=True)
-#print(nx.info(U))
-#humans = [attr['statuses_count'] for node,attr in U.nodes(data=True) if attr['label'] == 'human']
-#bots = [attr['statuses_count'] for node,attr in U.nodes(data=True) if attr['label'] == 'bot']
-#----------------------------------------------------------------------
-
-#humans = [node for node,attr in U.nodes(data=True) if attr['label'] == 'human']
-#bots = [node for node,attr in U.nodes(data=True) if attr['label'] == 'bot']
-
 #----------------------------------------------------------------------
 #print("ind")
 #ind = nx.in_degree_centrality(G)
@@ -126,131 +113,81 @@ for node in a:
 df = pd.read_csv("users.csv", encoding="utf8")
 df.set_index("user_id")
 
-#print(df[df['user_id'] == 755095269730095104])
-#print([s for s in G.successors(755095269730095104)])
-
 humans = [node for node,attr in G.nodes(data=True) if attr['label'] == 'human']
 bots = [node for node,attr in G.nodes(data=True) if attr['label'] == 'bot']
 
 following = nx.get_node_attributes(G, 'following')
 followers = nx.get_node_attributes(G, 'followers')
 
-h_ind_s = []
-h_outd_s = []
-h_ind_p = []
-h_outd_p = []
+h_rep_s = []
+h_rep_p = []
 for h in humans:
-    indegree_succ = []
-    outdegree_succ = []
-    indegree_pre = []
-    outdegree_pre = []
+    rep_succ = []
+    rep_pre = []
     for s in G.successors(h):
-        indegree_succ.append(followers[s])
-        outdegree_succ.append(following[s])
+        a = followers[s]
+        b = following[s]
+        if (a == 0 and b == 0):
+            rep_succ.append(0)
+        else:
+            rep_succ.append(a/(a+b))
     for p in G.predecessors(h):
-        indegree_pre.append(followers[p])
-        outdegree_pre.append(following[p])
+        a = followers[p]
+        b = following[p]
+        if (a == 0 and b == 0):
+            rep_pre.append(0)
+        else:
+            rep_pre.append(a/(a+b))
 
-    if (len(indegree_succ) > 0):
-        h_ind_s.append(statistics.median(indegree_succ))
+    if (len(rep_succ) > 0):
+        h_rep_s.append(statistics.median(rep_succ))
     else:
-        h_ind_s.append(0) 
-    if (len(outdegree_succ) > 0):
-        h_outd_s.append(statistics.median(outdegree_succ))
-    else:
-        h_outd_s.append(0)
+        h_rep_s.append(0) 
 
-    if (len(indegree_pre) > 0):
-        h_ind_p.append(statistics.median(indegree_pre))
+    if (len(rep_pre) > 0):
+        h_rep_p.append(statistics.median(rep_pre))
     else:
-        h_ind_p.append(0)
-    if (len(outdegree_pre) > 0):
-        h_outd_p.append(statistics.median(outdegree_pre))
-    else:
-        h_outd_p.append(0)
+        h_rep_p.append(0)
     
-print("Median mean neighbor in-degree of successors human",statistics.median(h_ind_s))
-print("Median mean neighbor out-degree of successors human",statistics.median(h_outd_s))
-print("Median mean neighbor in-degree of predecessors human",statistics.median(h_ind_p))
-print("Median mean neighbor out-degree of predecessors human",statistics.median(h_outd_p))
-
-# Make some graphs
-#plot(h_ind_s, "Indegree", "h_indegree_succ.png")
-#plot(h_outd_s, "Outdegree", "h_outdegree_succ.png")
-#plot(h_ind_p, "Indegree", "h_indegree_pre.png")
-#plot(h_outd_p, "Outdegree", "h_outdegree_pre.png")
-
-b_ind_s = []
-b_outd_s = []
-b_ind_p = []
-b_outd_p = []
+b_rep_s = []
+b_rep_p = []
 for b in bots:
-    indegree_succ = []
-    outdegree_succ = []
-    indegree_pre = []
-    outdegree_pre = []
+    rep_succ = []
+    rep_pre = []
     for s in G.successors(b):
-        indegree_succ.append(followers[s])
-        outdegree_succ.append(following[s])
+        a = followers[s]
+        c = following[s]
+        if (a == 0 and c == 0):
+            rep_succ.append(0)
+        else:
+            rep_succ.append(a/(a+c))
     for p in G.predecessors(b):
-        indegree_pre.append(followers[p])
-        outdegree_pre.append(following[p])
+        a = followers[p]
+        c = following[p]
+        if (a == 0 and c == 0):
+            rep_pre.append(0)
+        else:
+            rep_pre.append(a/(a+c))
 
-    if (len(indegree_succ) > 0):
-        b_ind_s.append(statistics.mean(indegree_succ))
+    if (len(rep_succ) > 0):
+        b_rep_s.append(statistics.median(rep_succ))
     else:
-        b_ind_s.append(0)
-    if (len(outdegree_succ) > 0):
-        b_outd_s.append(statistics.mean(outdegree_succ))
-    else:
-        b_outd_s.append(0)
+        b_rep_s.append(0) 
 
-    if (len(indegree_pre) > 0):
-        b_ind_p.append(statistics.mean(indegree_pre))
+    if (len(rep_pre) > 0):
+        b_rep_p.append(statistics.median(rep_pre))
     else:
-        b_ind_p.append(0)
-    if (len(outdegree_pre) > 0):
-        b_outd_p.append(statistics.mean(outdegree_pre))
-    else:
-        b_outd_p.append(0)
-    
-print("Median mean neighbor in-degree of successors bots",statistics.median(b_ind_s))
-print("Median mean neighbor out-degree of successors bots",statistics.median(b_outd_s))
-print("Median mean neighbor in-degree of predecessors bots",statistics.median(b_ind_p))
-print("Median mean neighbor out-degree of predecessors bots",statistics.median(b_outd_p))
-
-# Make some graphs
-#plot(b_ind_s, "Indegree", "b_indegree_succ.png")
-#plot(b_outd_s, "Outdegree", "b_outdegree_succ.png")
-#plot(b_ind_p, "Indegree", "b_indegree_pre.png")
-#plot(b_outd_p, "Outdegree", "b_outdegree_pre.png")
-
+        b_rep_p.append(0)
+ 
 # Print some general stats
 print("Nodes:", G.number_of_nodes(), "Edges:", G.number_of_edges())
 
-human_in = [i[1] for i in list(G.in_degree(humans))]
-human_out = [i[1] for i in list(G.out_degree(humans))]
-bots_in = [i[1] for i in list(G.in_degree(bots))]
-bots_out = [i[1] for i in list(G.out_degree(bots))]
-
-print("Human: mean in-degree", statistics.mean(human_in))
-print("Bots: mean in-degree", statistics.mean(bots_in))
-print("Human: mean out-degree", statistics.mean(human_out))
-print("Bots: mean out-degree", statistics.mean(bots_out))
-
-print("Human: average in-degree", statistics.median(human_in))
-print("Bots: average in-degree", statistics.median(bots_in))
-print("Human: average out-degree", statistics.median(human_out))
-print("Bots: average out-degree", statistics.median(bots_out))
-
 # Plot humans against bots
-plotvs(b_ind_s, h_ind_s, "Indegree", "indegree_succ.png")
-plotvs(b_outd_s, h_outd_s, "Outdegree", "outdegree_succ.png")
-plotvs(b_ind_p, h_ind_p, "Indegree", "indegree_pre.png")
-plotvs(b_outd_p, h_outd_p, "Outdegree", "outdegree_pre.png")
+plotvs(b_rep_s, h_rep_s, "Reputation", "reputation_succ.png")
+plotvs(b_rep_p, h_rep_p, "Reputation", "reputation_pre.png")
 
-degrees = [h_ind_s, h_outd_s, h_ind_p, h_outd_p, b_ind_s, b_outd_s, b_ind_p, b_outd_p]
+rep = [h_rep_s, h_rep_p, b_rep_s, b_rep_p]
 
-with open('listfile.data', 'wb') as filehandle:
+with open('reputation.data', 'wb') as filehandle:
     # store the data as binary data stream
-    pickle.dump(degrees, filehandle)
+    pickle.dump(rep, filehandle)
