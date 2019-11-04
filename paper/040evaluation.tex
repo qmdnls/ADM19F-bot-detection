@@ -1,0 +1,45 @@
+We trained a classification model to classify users as $l \in \{\text{human},\text{bot}\}$ using the following features:
+
+\begin{multicols}{2}
+\begin{itemize}
+    \item embedding vector username
+    \item embedding vector screen name
+    \item number of “followers” (in-degree)
+    \item number of “following” (out-degree)
+    \item number of times the user is listed
+    \item number of favorites
+    \item number of status
+    \item date created
+    \item default profile (boolean)
+    \item default profile image (boolean)
+    \item reputation
+    \item successor/predecessor reputation
+    \item successor/predecessor in-degree
+    \item successor/predecessor out-degree
+    \item successor/predecessor favorites count
+    \item successor/predecessor status count
+    \item successor/predecessor listed count
+    \item successor/predecessor account age
+    \item clustering coefficient
+    \item eigenvector centrality
+    \item density
+\end{itemize}
+\end{multicols}
+
+\noindent Our model outperforms previous models on the \textsc{Cresci-2018} dataset (table~\ref{tab:results}). We perform an ablation study to see the impact of different neighborhood features we have introduced.
+
+\begin{table}[]
+\centering
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+\textbf{Model}           & \textbf{TPR} & \textbf{FPR}  & \textbf{Acc} & \textbf{F-score} & \textbf{Recall@p95} & \textbf{AUC} \\ \midrule
+Different model & 0.50 & 0.50  & 0.50 & 0.50     & 0.50        & 0.50 \\
+SVM             & 0.50 & 0.50  & 0.50 & 0.50     & 0.50        & 0.50 \\
+Random forest   & 0.50 & 0.50  & 0.50 & 0.50     & 0.50        & 0.50 \\
+NN              & 0.50 & 0.50  & 0.50 & 0.50     & 0.50        & 0.50 \\
+NN + GF         & 0.50 & 0.50  & 0.50 & 0.50     & 0.50        & 0.50 \\
+NN + GF + NF    & \textbf{0.90} & \textbf{0.01} & \textbf{0.90} & \textbf{0.90}     & \textbf{0.90}        & \textbf{0.9} \\ \bottomrule
+\end{tabular}
+\caption{Placeholder evaluation results}
+\label{tab:results}
+\end{table}

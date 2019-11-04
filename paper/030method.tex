@@ -4,14 +4,14 @@ In this section we will briefly describe and analyze the dataset used in this wo
 \begin{figure}[t!]
     \centering
     \includegraphics[width=0.5\textwidth]{fig/graph-crop.pdf}
-    \caption{A visualization of the dataset. Each vertex corresponds to a Twitter user and each edge corresponds to a ``following" relationship between two users. A darker node has a higher degree.}
+    \caption{A visualization of the dataset. Each vertex corresponds to a Twitter user and each edge corresponds to a ``following" relationship between two users. A darker node has a higher degree. We can see many disconnected components.}
     \label{fig:twitter}
 \end{figure}
 
 \subsection{Dataset}
-For analysis, training and testing we use the labelled data collected in the \textsc{Cresci-2018} dataset~\cite{cresci2018fake}. The dataset contains 25,987 user accounts, each of which is assigned a binary label $l \in \{\text{human},\text{bot}\}$ and is the biggest one of its kind that we are aware of. Due to Twitter's developer policy\footnote{https://developer.twitter.com/en/developer-terms/agreement-and-policy.html} which restricts the ways in which user data collected using the Twitter API may be shared, it is difficult to find sizable high-quality datasets. As the rules allow for profile data to be shared online only under specific circumstances and with imposed restrictions, these datasets of fake accounts are typically shared as a set of (user\_id, label) pairs. The associated accounts can then be retrieved again using the Twitter API at a later time. However, as many of the labelled accounts are bots might have been deleted or changed to a ``protected" status which hides most of the profile information from the public. In our case, even though the dataset is relatively recent, only 13,091 of the originally 25,987 labelled accounts were still available (a reduction of about 49.6\%). Of these 6,082 accounts are labelled as human and 7,009 accounts are labelled as bots (see table~\ref{tab:dataset}).
+For analysis, training and testing we use the labelled data collected in the \textsc{Cresci-2018} dataset~\cite{cresci2018fake}. The dataset contains 25,987 user accounts, each of which is assigned a binary label $l \in \{\text{human},\text{bot}\}$ and is the biggest one of its kind that we are aware of. Due to Twitter's developer policy\footnote{https://developer.twitter.com/en/developer-terms/agreement-and-policy.html} which restricts the ways in which user data collected using the Twitter API may be shared, it is difficult to find sizable high-quality datasets. As the rules allow for profile data to be shared online only under specific circumstances and with imposed restrictions, these datasets of fake accounts are typically shared as a set of (user\_id, label) pairs. The associated accounts can then be retrieved again using the Twitter API at a later time. However, as many of the labelled accounts are bots might have been deleted or changed to a ``protected" status which hides most of the profile information from the public. In our case, even though the dataset is relatively recent, only 13,091 of the originally 25,987 labelled accounts were still available (a reduction of about 49.6\%). Of these 6,082 accounts are labelled to be human and 7,009 accounts are labelled as bots (see table~\ref{tab:dataset}).
 
-\begin{table}[]
+\begin{table}[t]
 \centering
 \begin{tabular}{@{}lllllll@{}}
 \toprule
@@ -88,6 +88,36 @@ Given this data we perform some basic analysis. When plotting the in-degree-coun
     \label{fig:centrality_clustering}
 \end{figure}
 
+
+\subsection{Neighborhood-based classification}
+\label{sec:approach}
+
+We introduce a novel graph topology and neighborhood-based approach to bot detection. Human and bot accounts typically differ in the way they use Twitter and as a result their structure in the social graph, or their ego graph, is typically different. Instead of classifying a node in the graph just by its immediate features (such as follower count, number of tweets, default profile image etc.) we propose to utilize the graph structure and the features of neighboring nodes in bot classification. We introduce an additional set of features computed as an aggregate over the entire set of predecessors and/or successors. 
+
+% REPUTATION
+\begin{figure}[t!]
+    \centering
+    \begin{subfigure}[t]{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{paper/FIG/reputation_pre.pdf}
+        \caption{Aggregated reputation of predecessors}
+    \end{subfigure}%
+    ~ 
+    \begin{subfigure}[t]{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{paper/FIG/reputation_succ.pdf}
+        \caption{Aggregated reputation of successors}
+    \end{subfigure}
+    \caption{We compare the aggregated reputation of users following (predecessors) or followed by (successors) a given user over all human and bot accounts.}
+    \label{fig:reputation}
+\end{figure}
+
+We will first explore the scraped dataset for such aggregate features. To evaluate the reputation of a user in the graph it makes sense not only to look at absolute follower and following counts but also at measures of reciprocity and reputation. We define the reputation $r$ of a user $u$ by
+$$r_u = \frac{ |u_\text{followers}| }{ |u_\text{followers}| + |u_\text{following}|}.$$
+An aggregate of this measure can be computed across all predecessors/successors by taking the median (see figure~\ref{fig:reputation}). We find that overall successors appear to have a higher reputation than predecessors. This observation makes sense as many users follow high-degree, high-reputation nodes such as news sources, which in turn are not likely to be following them back. We can also make the observation that human nodes tend to have more reputable predecessors. Additionally, the distribution of reputation of successors is extremely skewed to both extremes for bots which indicates most of them they either follow very reputable nodes or nodes with very low reputation. While the distribution is also extreme for humans, it is not skewed quite as strongly and has many more nodes with a reputation $0.1 < r < 0.9$.
+
+When looking at the cumulative degree distribution among predecessors (figure~\ref{fig:cum_degrees_predecessors}) and successors (figure~\ref{fig:cum_degrees_successors}) we find that many bot accounts in the dataset have predecessors with very high in-degree and out-degree whereas most genuine accounts seem to have lower predecessor degree distributions. For successors however, human accounts tend to have successors with a higher in-degree and lower out-degree, which is in line with our observations regarding the reputation and again indicating that human users tend to follow more accounts with many followers such as news accounts or celebrities. 
+
 % DEGREE PREDECESSORS
 \begin{figure}[t!]
     \centering
@@ -123,29 +153,6 @@ Given this data we perform some basic analysis. When plotting the in-degree-coun
     \caption{Cumulative aggregated degree distribution of successors nodes, i.e. median degree of users followed by a given user over all bot and human accounts.}
     \label{fig:cum_degrees_successors}
 \end{figure}
-
-% REPUTATION
-\begin{figure}[t!]
-    \centering
-    \begin{subfigure}[t]{0.5\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{paper/FIG/reputation_pre.pdf}
-        \caption{Aggregated reputation of predecessors}
-    \end{subfigure}%
-    ~ 
-    \begin{subfigure}[t]{0.5\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{paper/FIG/reputation_succ.pdf}
-        \caption{Aggregated reputation of successors}
-    \end{subfigure}
-    \caption{We compare the aggregated reputation of users following (predecessors) or followed by (successors) a given user over all human and bot accounts.}
-    \label{fig:reputation}
-\end{figure}
-
-\subsection{Neighborhood-based classification}
-\label{sec:approach}
-
-We define the reputation $r$ of a user $u$ by $r_u = \frac{ |u_\text{followers}| }{ |u_\text{followers}| + |u_\text{following}| }$.s
 
 %\noindent
 %\textit{Logistic regression.} Given a set of $m$ trainings samples $S = \{ (x^{(i)}, y^{(i)}) \}_{i=1}^m$ where $x^{(i)}$ responds to the input features and $y^{(i)}$ in $\{ 0,1 \}$ to the labels, we can model logistic regression as
