@@ -22,15 +22,14 @@ Keywords: Fake account detection, social graph, network topology, neighborhood a
 
 Some interesting aggregate distributions over a node's predecessors/successors in the social graph that we found are below. For the full version please read our paper.
 
-<p align="center">Median reputation of predecessors:</p>
 <p align="center"><img src="paper/FIG/reputation_pre.png?raw=true" width="550px" height="auto"></p>
+<p align="center">Median reputation of predecessors</p>
 
-<p align="center">Median out-degree of predecessors:</p>
 <p align="center"><img src="paper/FIG/indegree_pre.png?raw=true" width="550px" height="auto"></p>
+<p align="center">Median in-degree of predecessors</p>
 
-<p align="center">Median out-degree of predecessors:</p>
 <p align="center"><img src="paper/FIG/indegree_succ.png?raw=true" width="550px" height="auto"></p>
-
+<p align="center">Median in-degree of successors</p>
 
 ## Building the paper
 UNIX/Linux: type 'make' to build the paper/main.pdf file.  
