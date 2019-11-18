@@ -53,6 +53,7 @@ if (os.path.exists("user.graph")):
 
 else:
     print("Creating graph from dataset...")
+    print("This can take a while.")
     G = nx.DiGraph()
     
     # Get total file length to calculate progress
@@ -73,4 +74,4 @@ if not (os.path.exists("undirected.graph")):
 #U = G.subgraph(users)
 
 # Print some general stats
-print("Nodes:", G.number_of_nodes(), "Edges:", G.number_of_edges(), "Triangles:", "???")
+print("Nodes:", G.number_of_nodes(), "Edges:", G.number_of_edges())
