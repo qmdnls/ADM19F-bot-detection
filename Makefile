@@ -6,7 +6,7 @@ help:
 	@echo "make generate		generates the user.graph from data/users.csv"
 	@echo "make regenerate		deletes user.graph and generates it again"
 	@echo "make install		make a virtualenv in the base directory and install requirements"
-	@echo "make paper		compile the paper's .tex source"
+	@echo "make pdf			compile the paper's .tex source"
 
 install:
 	@echo "Setting up virtualenv..."
@@ -33,5 +33,11 @@ regenerate:
 run:
 	@python3 stats.py
 
-paper:
-	@pdflatex paper/main.tex
+.PAPER:
+	@echo "Please use 'make pdf' to build the paper."
+
+paper: | .PAPER
+
+pdf:
+	@echo "Compiling .tex source files... (requires latexmk)"
+	@latexmk -pdf -use-make paper/main.tex
