@@ -5,3 +5,8 @@ api.txt
 *.csv
 *.tsv
 .env
+*.fdb_latexmk
+*.fls
+*.log
+*.aux
+*.log
