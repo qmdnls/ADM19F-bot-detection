@@ -4,3 +4,4 @@ api.txt
 *.graph
 *.csv
 *.tsv
+.env
