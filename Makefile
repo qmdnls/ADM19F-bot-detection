@@ -6,8 +6,10 @@ help:
 	@echo "make generate		generates the user.graph from data/users.csv"
 	@echo "make regenerate		deletes user.graph and generates it again"
 	@echo "make install		make a virtualenv in the base directory and install requirements"
-	@echo "make pdf			compile the paper's .tex source using latexmk (recommended)"
+	@echo "make paper.pdf		build the paper (recommended)"
+	@echo "make pdf			compile the paper's .tex source using latexmk"
 	@echo "make pdflatex		compile the paper's .tex source using pdflatex, might require multiple runs"
+	@echo "make all.tar		creates a .tar ready for distribution"
 
 install:
 	@echo "Setting up virtualenv..."
@@ -38,10 +40,10 @@ regenerate:
 run:
 	@python3 stats.py
 
-.PAPER:
-	@echo "Please use 'make pdf' to build the paper (requires latexmk). Alternatively use 'make pdflatex' to build manually."
-
-paper: | .PAPER
+paper.pdf:
+	@echo "Warning: Requires latexmk. To compile manually using pdflatex please run 'make pdflatex'."
+	@echo "Compiling .tex source files..."
+	@cd paper && make pdf
 
 pdf:
 	@echo "Compiling .tex source files..."
@@ -51,3 +53,6 @@ pdflatex:
 	@echo "Warning: Might require multiple runs to correctly generate table of contents, bibliography etc."
 	@echo "Compiling .tex source files..."
 	@cd paper && make pdflatex
+
+all.tar:
+	tar --exclude='*.graph' --exclude='*.tar.gz' -czvf all.tar.gz *
