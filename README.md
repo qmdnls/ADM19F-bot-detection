@@ -14,9 +14,9 @@ Keywords: Fake account detection, social graph, network topology, neighborhood a
 4.6 million accounts  
 ~13,000 labelled accounts
 
-<p align="center"><img src="fig/indegrees.png?raw=true" width="550px" height="auto"></p>
-<p align="center"><img src="fig/outdegrees.png?raw=true" width="550px" height="auto"></p>
-<p align="center"><img src="fig/centrality.png?raw=true" width="550px" height="auto"></p>
+<p align="center"><img src="paper/FIG/indegrees.png?raw=true" width="550px" height="auto"></p>
+<p align="center"><img src="paper/FIG/outdegrees.png?raw=true" width="550px" height="auto"></p>
+<p align="center"><img src="paper/FIG/centrality.png?raw=true" width="550px" height="auto"></p>
 
 ## Aggregate features
 
