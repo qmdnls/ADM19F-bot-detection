@@ -31,7 +31,13 @@ df['label'] = df['label'].map({'human': 0, 'bot': 1})
 # Drop columns that are no longer needed
 df = df.drop(['created_at', 'description', 'followers_list', 'following_list', 'location', 'name', 'protected', 'screen_name', 'url', 'user_id'], axis=1)
 
+# Add reputation column
+df['reputation'] = df['following'].divide(df['following'].add(df['followers']))
+df['reputation'] = df['reputation'].fillna(0)
+
 print(df)
+
+df.to_csv("data/train.csv", index=None, header=True)
 
 # Show correlation matrix
 corr = df.corr()
