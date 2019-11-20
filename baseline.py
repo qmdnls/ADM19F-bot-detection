@@ -17,6 +17,7 @@ train, test = df[df['is_train']==True], df[df['is_train']==False]
 # Define features and target
 features = list(df.columns)
 features.remove('label')
+features.remove('is_train')
 y_train = train['label']
 
 print("Features:", features)
@@ -36,7 +37,7 @@ svm_pred = svm.predict(test[features])
 y_true = test['label']
 rf_fpr, rf_tpr, _ = metrics.roc_curve(y_true, rf_pred)
 rf_auc = metrics.auc(rf_fpr, rf_tpr)
-svm_fpr, svm_tpr, _ = metrics.roc.curve(y_true, svm_pred)
+svm_fpr, svm_tpr, _ = metrics.roc_curve(y_true, svm_pred)
 svm_auc = metrics.auc(svm_fpr, svm_tpr)
 
 print("Evaluation")
