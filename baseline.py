@@ -29,7 +29,7 @@ rf.fit(train[features], y_train)
 rf_pred = rf.predict(test[features])
 
 # SVM
-svm = sk.BaggingClassifier(svm.SVC(kernel='linear'))
+svm = svm.SVC(kernel='linear')
 svm.fit(train[features], y_train)
 svm_pred = svm.predict(test[features])
 
