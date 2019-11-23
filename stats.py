@@ -92,10 +92,8 @@ default_image_successors = {}
 time = time.time()
 length = len(users)
 for idx, user in enumerate(users):
-    if (idx > 5):
-        break
     # Progress
-    print("User", idx, "of", length, "(", str(round(100*idx/length)), "%)", end="\r", flush=True)
+    print("User", idx, "of", length, "(" + str(round(100*idx/length)) + "%)", end="\r", flush=True)
     # Temp vars for one user iteration
     ind = []
     outd = []
@@ -179,27 +177,15 @@ for idx, user in enumerate(users):
     default_predecessors[user] = statistics.median(default)
     default_image_predecessors[user] = statistics.median(default_image)
 
-print(indegree_successors)
-print(outdegree_successors)
-print(reputation_successors)
-print(favorites_successors)
-print(status_successors)
-print(listed_successors)
-print(age_successors)
-print(default_successors)
-print(default_image_successors)
-print(indegree_predecessors)
-print(outdegree_predecessors)
-print(reputation_predecessors)
-print(favorites_predecessors)
-print(status_predecessors)
-print(listed_predecessors)
-print(age_predecessors)
-print(default_predecessors)
-print(default_image_predecessors)
+data = [indegree_predecessors, indegree_successors, outdegree_predecessors, outdegree_successors, reputation_predecessors, reputation_successors, favorites_predecessors, favorites_successors, status_predecessors, status_successors, listed_predecessors, listed_successors, age_predecessors, age_successors, default_predecessors, default_successors, default_image_predecessors, default_image_successors]
 
-#data = [h_in_values, h_in_hist, b_in_values, b_in_hist]
-
-#with open('outdegreescatter.data', 'wb') as filehandle:
+with open('data/neighbor.data', 'wb') as filehandle:
     # store the data as binary data stream
-#    pickle.dump(data, filehandle)
+    pickle.dump(data, filehandle)
+
+# Read the data like this:
+# with open('data/neighbor.data', 'rb') as filehandle:
+#     data = pickle.load(filehandle)
+#     indegree_predecessors_data, indegree_successors_data, outdegree_predecessors_data, outdegree_successors_data, reputation_predecessors_data, reputation_successors_data, favorites_predecessors_data, favorites_successors_data, status_predecessors_data, status_successors_data, listed_predecessors_data, listed_successors_data, age_predecessors_data, age_successors_data, default_predecessors_data, default_successors_data, default_image_predecessors_data, default_image_successors_data = tuple(data)
+
+print("Done.")
