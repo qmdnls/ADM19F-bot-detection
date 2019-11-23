@@ -7,6 +7,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import IPython
 import pickle
+import time
 from collections import Counter
 
 # Histogram plotting function
@@ -45,178 +46,160 @@ a = [node for node,attr in G.nodes(data=True) if "label" not in attr]
 for node in a:
     G.remove_node(node)
 
-
-#----------------------------------------------------------------------
-#print("ind")
-#ind = nx.in_degree_centrality(G)
-#print("outd")
-#outd = nx.out_degree_centrality(G)
-
-#h_ind = []
-#for h in humans:
-#    h_ind.append(ind[h])
-#
-#b_ind = []
-#for b in bots:
-#    b_ind.append(ind[b])
-
-#h_outd = []
-#for h in humans:
-#    h_outd.append(outd[h])
-
-#b_outd = []
-#for b in bots:
-#    b_outd.append(outd[b])
-
-#print("Median human in-degree centrality", statistics.median(h_ind))
-#print("Median bot in-degree centrality", statistics.median(b_ind))
-#print("Median human out-degree centrality", statistics.median(h_outd))
-#print("Median bot in-degree centrality", statistics.median(b_outd))
-
-
-#print("ev")
-#ev = nx.eigenvector_centrality_numpy(G)
-
-#h_ev = []
-#for h in humans:
-#    h_ev.append(ev[h])
-
-#b_ev = []
-#for b in bots:
-#    b_ev.append(ev[b])
-
-#print("Median human eigenvector centrality", statistics.median(h_ev))
-#print("Median bot eigenvector centrality", statistics.median(b_ev))
-#----------------------------------------------------------------------
-
-#----------------------------------------------------------------------
-## NEED STATISTICS FOR ALL 4M USERS FROM TWITTER API TO USE THIS CODE
-#neighbor_followers = []
-#neighbor_following = []
-#neighbor_ratio = []
-#for h in humans:
-#    followers_neighbors = []
-#    following_neighbors = []
-#    friend_ratio = []
-#    for s in G.successors(h):
-#        followers = s['followers']
-#        following = s['following']
-#        ratio = followers/following
-#        followers_list.append(followers)
-#        following_list.append(following)
-#        friend_ratio.append(ratio)
-#    neighbor_followers.append(statistics.median(followers_neighbors))
-#    neighbor_following.append(statistics.median(following_neighbors))
-#    neighbor_ratio.append(statistics.median(friend_ratio))
-#----------------------------------------------------------------------
-
-df = pd.read_csv("data/users.csv", encoding="utf8")
-df.set_index("user_id")
+#print("Loading dataset...")
+#df = pd.read_csv("data/users.csv", encoding="utf8")
+#df.set_index("user_id")
 
 humans = [node for node,attr in G.nodes(data=True) if attr['label'] == 'human']
 bots = [node for node,attr in G.nodes(data=True) if attr['label'] == 'bot']
+users = humans + bots
 
+print("Retrieve node attributes from the graph...")
 following = nx.get_node_attributes(G, 'following')
 followers = nx.get_node_attributes(G, 'followers')
+created_at = nx.get_node_attributes(G, 'created_at')
+favorites_count = nx.get_node_attributes(G, 'favourites_count')
+statuses_count = nx.get_node_attributes(G, 'statuses_count')
+listed_count = nx.get_node_attributes(G, 'listed_count')
+default_profile = nx.get_node_attributes(G, 'default_profile')
+default_profile_image = nx.get_node_attributes(G, 'default_profile_image')
+default_profile = {k: int(v) for k,v in default_profile.items()}
+default_profile_image = {k: int(v) for k,v in default_profile_image.items()}
 
-#h_rep_s = []
-#h_rep_p = []
-#for h in humans:
-#    rep_succ = []
-#    rep_pre = []
-#    for s in G.successors(h):
-#        a = followers[s]
-#        b = following[s]
-#        if (a == 0 and b == 0):
-#            rep_succ.append(0)
-#        else:
-#            rep_succ.append(a/(a+b))
-#    for p in G.predecessors(h):
-#        a = followers[p]
-#        b = following[p]
-#        if (a == 0 and b == 0):
-#            rep_pre.append(0)
-#        else:
-#            rep_pre.append(a/(a+b))
-#
-#    if (len(rep_succ) > 0):
-#        h_rep_s.append(statistics.median(rep_succ))
-#    else:
-#        h_rep_s.append(0) 
-#
-#    if (len(rep_pre) > 0):
-#        h_rep_p.append(statistics.median(rep_pre))
-#    else:
-#        h_rep_p.append(0)
-    
-#b_rep_s = []
-#b_rep_p = []
-#for b in bots:
-#    rep_succ = []
-#    rep_pre = []
-#    for s in G.successors(b):
-#        a = followers[s]
-#        c = following[s]
-#        if (a == 0 and c == 0):
-#            rep_succ.append(0)
-#        else:
-#            rep_succ.append(a/(a+c))
-#    for p in G.predecessors(b):
-#        a = followers[p]
-#        c = following[p]
-#        if (a == 0 and c == 0):
-#            rep_pre.append(0)
-#        else:
-#            rep_pre.append(a/(a+c))
-#
-#    if (len(rep_succ) > 0):
-#        b_rep_s.append(statistics.median(rep_succ))
-#    else:
-#        b_rep_s.append(0) 
-#
-#    if (len(rep_pre) > 0):
-#        b_rep_p.append(statistics.median(rep_pre))
-#    else:
-#        b_rep_p.append(0)
+print("Get node neighboor attributes...")
 
-#h_coeff_list = []
-#length = len(humans)
-#for idx,h in enumerate(humans):
-#    print(idx, "of", length, "rows processed", "(" + str(round(100*idx/length)) + "%)", end="\r", flush=True)
-#    h_coeff_list.append(nx.clustering(G,h))
-#b_coeff_list = []
-#length = len(bots)
-#for idx,b in enumerate(bots):
-#    print(idx, "of", length, "rows processed", "(" + str(round(100*idx/length)) + "%)", end="\r", flush=True)
-#    b_coeff_list.append(nx.clustering(G,b))
- 
-# Print some general stats
-print("Nodes:", G.number_of_nodes(), "Edges:", G.number_of_edges())
+# Create a dict for every neighborhood feature so we can add it to the dataframe later, suffix s for successors, p for predecessors in the graph
+indegree_predecessors = {}
+indegree_successors = {}
+outdegree_predecessors = {}
+outdegree_successors = {}
+reputation_predecessors = {}
+reputation_successors = {}
+favorites_predecessors = {}
+favorites_successors = {}
+status_predecessors = {}
+status_successors = {}
+listed_predecessors = {}
+listed_successors = {}
+age_predecessors = {}
+age_successors = {}
+default_predecessors = {}
+default_successors = {}
+default_image_predecessors = {}
+default_image_successors = {}
 
-#rep = [h_rep_s, h_rep_p, b_rep_s, b_rep_p]
-in_degrees = dict(G.out_degree())
-h_in = { h : in_degrees[h] for h in humans }
-b_in = { b: in_degrees[b] for b in bots }
-h_in_values = sorted(set(h_in.values()))
-b_in_values = sorted(set(b_in.values()))
-h_count = Counter(h_in.values())
-b_count = Counter(b_in.values())
-h_in_hist = []
-for x in h_in_values:
-    h_in_hist.append(h_count[x])
-b_in_hist = []
-for x in b_in_values:
-    b_in_hist.append(b_count[x])
-plt.figure()
-plt.grid(True)
-plt.loglog(h_in_values, h_in_hist, 'ro-', color="blue", marker="x")
-plt.loglog(b_in_values, b_in_hist, 'ro-', color="red", marker="v")
-plt.xlabel('Degree')
-plt.ylabel('Count')
-plt.savefig('fig/out.png')
+# For each user, get the successor and predecessor features as a list so we can calculate the median and use that
+time = time.time()
+length = len(users)
+for idx, user in enumerate(users):
+    if (idx > 5):
+        break
+    # Progress
+    print("User", idx, "of", length, "(", str(round(100*idx/length)), "%)", end="\r", flush=True)
+    # Temp vars for one user iteration
+    ind = []
+    outd = []
+    rep = []
+    fav = []
+    status = []
+    listed = []
+    age = []
+    default = []
+    default_image = []
+    features = [ind, outd, rep, fav, status, listed, age, default, default_image]
+    for successor in G.successors(user):
+        # Retrieve the features
+        indegree = followers[successor]
+        outdegree = following[successor]
+        reputation = 0
+        if (indegree > 0 or outdegree > 0):
+            reputation = indegree / (indegree + outdegree)
+        age_ = (time - created_at[successor] / 10**9) / 60 / 60 / 24 # Convert nanoseconds to seconds to subtract and obtain the age, then convert the age from seconds to days
+        # Append to successor list
+        ind.append(indegree)
+        outd.append(outdegree)
+        rep.append(reputation)
+        fav.append(favorites_count[successor])
+        status.append(statuses_count[successor])
+        listed.append(listed_count[successor])
+        age.append(age_)
+        default.append(default_profile[successor])
+        default_image.append(default_profile_image[successor])
+    for feature in features:
+        if (len(feature) == 0):
+            feature.append(0)
+    indegree_successors[user] = statistics.median(ind)    
+    outdegree_successors[user] = statistics.median(outd)
+    reputation_successors[user] = statistics.median(rep)
+    favorites_successors[user] = statistics.median(fav)
+    status_successors[user] = statistics.median(status)
+    listed_successors[user] = statistics.median(listed)
+    age_successors[user] = statistics.median(age)
+    default_successors[user] = statistics.median(default)
+    default_image_successors[user] = statistics.median(default_image)
+    # Repeat the same thing for predecessors
+    ind = []
+    outd = []
+    rep = []
+    fav = []
+    status = []
+    listed = []
+    age = []
+    default = []
+    default_image = []
+    features = [ind, outd, rep, fav, status, listed, age, default, default_image]
+    for predecessor in G.predecessors(user):
+        # Retrieve the features
+        indegree = followers[predecessor]
+        outdegree = following[predecessor]
+        reputation = 0
+        if (indegree > 0 or outdegree > 0):
+            reputation = indegree / (indegree + outdegree)
+        age_ = (time - created_at[predecessor] / 10**9) / 60 / 60 / 24 # Convert nanoseconds to seconds to subtract and obtain the age, then convert the age from seconds to days
+        # Append to successor list
+        ind.append(indegree)
+        outd.append(outdegree)
+        rep.append(reputation)
+        fav.append(favorites_count[predecessor])
+        status.append(statuses_count[predecessor])
+        listed.append(listed_count[predecessor])
+        age.append(age_)
+        default.append(default_profile[predecessor])
+        default_image.append(default_profile_image[predecessor])
+    for feature in features:
+        if (len(feature) == 0):
+            feature.append(0)
+    indegree_predecessors[user] = statistics.median(ind) 
+    outdegree_predecessors[user] = statistics.median(outd)
+    reputation_predecessors[user] = statistics.median(rep)
+    favorites_predecessors[user] = statistics.median(fav)
+    status_predecessors[user] = statistics.median(status)
+    listed_predecessors[user] = statistics.median(listed)
+    age_predecessors[user] = statistics.median(age)
+    default_predecessors[user] = statistics.median(default)
+    default_image_predecessors[user] = statistics.median(default_image)
 
-data = [h_in_values, h_in_hist, b_in_values, b_in_hist]
+print(indegree_successors)
+print(outdegree_successors)
+print(reputation_successors)
+print(favorites_successors)
+print(status_successors)
+print(listed_successors)
+print(age_successors)
+print(default_successors)
+print(default_image_successors)
+print(indegree_predecessors)
+print(outdegree_predecessors)
+print(reputation_predecessors)
+print(favorites_predecessors)
+print(status_predecessors)
+print(listed_predecessors)
+print(age_predecessors)
+print(default_predecessors)
+print(default_image_predecessors)
 
-with open('outdegreescatter.data', 'wb') as filehandle:
+#data = [h_in_values, h_in_hist, b_in_values, b_in_hist]
+
+#with open('outdegreescatter.data', 'wb') as filehandle:
     # store the data as binary data stream
-    pickle.dump(data, filehandle)
+#    pickle.dump(data, filehandle)

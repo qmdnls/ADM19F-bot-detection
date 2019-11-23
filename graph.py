@@ -36,7 +36,10 @@ def graph_from_data(G, chunk, length):
         for following_id in following:
             G.add_node(following_id)
             G.add_edge(uid, following_id)
-    
+
+    # Use integer time representation for the graph attribute created_at
+    chunk['created_at'] = pd.to_datetime(chunk['created_at'])
+    chunk['created_at'] = chunk['created_at'].astype(int)
     attributes = chunk.set_index('user_id').T.to_dict()
     nx.set_node_attributes(G, attributes)
 
@@ -67,9 +70,9 @@ else:
     nx.write_gpickle(G, "user.graph")
 
 # Check whether undirected version is saved, otherwise create the file and save it
-if not (os.path.exists("undirected.graph")):
-    F = G.to_undirected()
-    nx.write_gpickle(F, "undirected.graph")
+#if not (os.path.exists("undirected.graph")):
+    #F = G.to_undirected()
+    #nx.write_gpickle(F, "undirected.graph")
 
 #U = G.subgraph(users)
 
