@@ -37,7 +37,7 @@ df['reputation'] = df['reputation'].fillna(0)
 
 print(df)
 
-df.to_csv("data/train.csv", index=None, header=True)
+df.to_csv("data/train_baseline.csv", index=None, header=True)
 
 # Show correlation matrix
 corr = df.corr()

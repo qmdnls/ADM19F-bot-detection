@@ -188,4 +188,22 @@ with open('data/neighbor.data', 'wb') as filehandle:
 #     data = pickle.load(filehandle)
 #     indegree_predecessors_data, indegree_successors_data, outdegree_predecessors_data, outdegree_successors_data, reputation_predecessors_data, reputation_successors_data, favorites_predecessors_data, favorites_successors_data, status_predecessors_data, status_successors_data, listed_predecessors_data, listed_successors_data, age_predecessors_data, age_successors_data, default_predecessors_data, default_successors_data, default_image_predecessors_data, default_image_successors_data = tuple(data)
 
+del G
+
+print("Loading dataset...")
+df = pd.read_csv("data/users.csv", encoding="utf8")
+df.set_index("user_id")
+
+# Set column names
+features = ("indegree_predecessors", "indegree_successors", "outdegree_predecessors", "outdegree_successors", "reputation_predecessors", "reputation_successors", "favorites_predecessors", "favorites_successors", "status_predecessors", "status_successors", "listed_predecessors", "listed_successors", "age_predecessors", "age_successors", "default_predecessors", "default_successors", "default_image_predecessors", "default_image_successors")
+d = dict(zip(features, tuple(data)))
+
+print("Merge neighborhood features into training dataset...")
+for name, feature in d.items():
+    df[name] = df['user_id'].map(feature)
+
+print("Write dataset to file...")
+df.head()
+df.to_csv("data/users_neighborhood.csv", index=None, header=True)
+
 print("Done.")

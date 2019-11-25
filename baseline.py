@@ -20,6 +20,7 @@ features.remove('label')
 features.remove('is_train')
 y_train = train['label']
 
+print("Number of features:", len(features))
 print("Features:", features)
 print("")
 
@@ -29,18 +30,18 @@ rf.fit(train[features], y_train)
 rf_pred = rf.predict(test[features])
 
 # SVM
-svm = svm.SVC(kernel='linear')
-svm.fit(train[features], y_train)
-svm_pred = svm.predict(test[features])
+#svm = svm.SVC(kernel='linear')
+#svm.fit(train[features], y_train)
+#svm_pred = svm.predict(test[features])
 
 # Evaluation
 y_true = test['label']
 rf_fpr, rf_tpr, _ = metrics.roc_curve(y_true, rf_pred)
 rf_auc = metrics.auc(rf_fpr, rf_tpr)
-svm_fpr, svm_tpr, _ = metrics.roc_curve(y_true, svm_pred)
-svm_auc = metrics.auc(svm_fpr, svm_tpr)
+#svm_fpr, svm_tpr, _ = metrics.roc_curve(y_true, svm_pred)
+#svm_auc = metrics.auc(svm_fpr, svm_tpr)
 
 print("Evaluation")
 print("RF:", "TPR:", round(rf_tpr[1], 4), "FPR:", round(rf_fpr[1], 4), "F1 score:", round(metrics.f1_score(y_true, rf_pred), 4), "AUC:", round(rf_auc, 4))
-print("SVM:", "TPR:", round(svm_tpr[1], 4), "FPR:", round(svm_fpr[1], 4), "F1 score:", round(metrics.f1_score(y_true, svm_pred), 4), "AUC:", round(svm_auc, 4))
+#print("SVM:", "TPR:", round(svm_tpr[1], 4), "FPR:", round(svm_fpr[1], 4), "F1 score:", round(metrics.f1_score(y_true, svm_pred), 4), "AUC:", round(svm_auc, 4))
 
