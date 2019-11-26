@@ -15,52 +15,16 @@ df = pd.read_csv('data/train.csv', encoding='utf8', engine='python', chunksize=N
 # Define features and target
 features = list(df.columns)
 features.remove('label')
-features.remove('reputation_predecessors')
-features.remove('reputation_successors')
-features.remove('default_image_successors')
-features.remove('default_image_predecessors')
-features.remove('listed_successors')
-features.remove('default_successors')
-features.remove('default_predecessors')
-features.remove('default_profile_image')
+features = ['favourites_count', 'followers', 'statuses_count', 'indegree_successors', 'outdegree_predecessors', 'favorites_predecessors', 'favorites_successors', 'status_predecessors', 'age_predecessors', 'account_age', 'listed_predecessors', 'reputation']
 
-x_train, x_test, y_train, y_test = model_selection.train_test_split(df[features], df['label'], test_size=0.25, shuffle=True, stratify=df['label'])
+x_train, x_test, y_train, y_test = model_selection.train_test_split(df[features], df['label'], test_size=0.1, shuffle=True, stratify=df['label'])
 
 print("Number of features:", len(features))
 print("Features:", features)
 print("")
 
-# Number of trees in random forest
-n_estimators = [int(x) for x in np.linspace(start = 200, stop = 2000, num = 10)]
-
-# Number of features to consider at every split
-max_features = ['auto', 'sqrt']
-
-# Maximum number of levels in tree
-max_depth = [int(x) for x in np.linspace(10, 110, num = 11)]
-max_depth.append(None)
-
-# Minimum number of samples required to split a node
-min_samples_split = [2, 5, 10]
-
-# Minimum number of samples required at each leaf node
-min_samples_leaf = [1, 2, 4]
-
-# Method of selecting samples for training each tree
-bootstrap = [True, False]
-
-# Create the random grid
-random_grid = {'n_estimators': n_estimators,
-               'max_features': max_features,
-               'max_depth': max_depth,
-               'min_samples_split': min_samples_split,
-               'min_samples_leaf': min_samples_leaf,
-               'bootstrap': bootstrap}
-
-
-
-# Random Forest
-rf = sk.RandomForestClassifier(n_jobs=2, random_state=0, n_estimators=200, bootstrap=True, class_weight=None, criterion='gini',max_depth=15, max_features=19, max_leaf_nodes=None, min_samples_leaf=1, min_samples_split=2, min_weight_fraction_leaf=0.0, oob_score=False, verbose=0, warm_start=False)
+# Random For3t
+rf = sk.RandomForestClassifier(n_jobs=2, random_state=0, n_estimators=100, bootstrap=True, class_weight=None, criterion='gini',max_depth=15, max_features=3, max_leaf_nodes=None, min_samples_leaf=1, min_samples_split=2, min_weight_fraction_leaf=0.0, oob_score=False, verbose=0, warm_start=False)
 rf.fit(x_train, y_train)
 rf_pred = rf.predict(x_test)
 

@@ -8,7 +8,7 @@ from sklearn.multiclass import OneVsRestClassifier
 np.random.seed(0)
 
 print("Loading dataset...")
-df = pd.read_csv('data/train.csv', encoding='utf8', engine='python', chunksize=None)
+df = pd.read_csv('data/train_baseline.csv', encoding='utf8', engine='python', chunksize=None)
 
 # Use 75% of entries as training data
 df['is_train'] = np.random.uniform(0, 1, len(df)) <= 0.75

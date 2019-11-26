@@ -76,10 +76,10 @@ opt = optim.Adam(net.parameters(), lr=1e-3, betas=(0.9, 0.999))
 criterion = nn.BCEWithLogitsLoss(pos_weight=torch.Tensor([0.8677414752461121]))
 
 # gamma = decaying factor
-scheduler = StepLR(opt, step_size=5, gamma=0.975)
+#scheduler = StepLR(opt, step_size=5, gamma=0.975)
 
 y_t = y_test.unsqueeze(dim=1)
-def train_epoch(model, x, y, opt, criterion, batch_size=500):
+def train_epoch(model, x, y, opt, criterion, batch_size=16):
     model.train()
     losses = []
     valid_losses = []
@@ -112,13 +112,13 @@ def train_epoch(model, x, y, opt, criterion, batch_size=500):
             scores.append(metrics.f1_score(y_test, pred))
             model.train()
     
-    scheduler.step()
+    #scheduler.step()
     return losses, valid_losses, scores
 
 e_losses = []
 v_losses = []
 e_scores = []
-num_epochs = 400
+num_epochs = 1500
 
 for e in range(num_epochs):
     # Progress
