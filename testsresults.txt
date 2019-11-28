@@ -1,0 +1,34 @@
+RF: TPR: 0.8809 FPR: 0.1254 F1 score: 0.8872 AUC: 0.8777
+Number of features: 26
+Features: ['default_profile', 'default_profile_image', 'favourites_count', 'followers', 'following', 'listed_count', 'statuses_count', 'indegree_predecessors', 'indegree_successors', 'outdegree_predecessors', 'outdegree_successors', 'reputation_predecessors', 'reputation_successors', 'favorites_predecessors', 'favorites_successors', 'status_predecessors', 'status_successors', 'listed_predecessors', 'listed_successors', 'age_predecessors', 'age_successors', 'default_successors', 'default_image_predecessors', 'account_age', 'reputation', 'is_train']
+
+Evaluation
+RF: TPR: 0.8849 FPR: 0.122 F1 score: 0.8907 AUC: 0.8814
+
+
+
+
+Number of features: 19
+Features: ['default_profile', 'default_profile_image', 'favourites_count', 'followers', 'following', 'listed_count', 'statuses_count', 'indegree_predecessors', 'indegree_successors', 'outdegree_predecessors', 'outdegree_successors', 'reputation_predecessors', 'reputation_successors', 'favorites_predecessors', 'favorites_successors', 'status_predecessors', 'status_successors', 'reputation', 'is_train']
+
+Evaluation
+RF: TPR: 0.8656 FPR: 0.1254 F1 score: 0.8785 AUC: 0.8701
+Number of features: 20
+Features: ['default_profile', 'default_profile_image', 'favourites_count', 'followers', 'following', 'listed_count', 'statuses_count', 'indegree_predecessors', 'indegree_successors', 'outdegree_predecessors', 'outdegree_successors', 'reputation_predecessors', 'reputation_successors', 'favorites_predecessors', 'favorites_successors', 'status_predecessors', 'status_successors', 'account_age', 'reputation', 'is_train']
+
+Evaluation
+RF: TPR: 0.8786 FPR: 0.1214 F1 score: 0.8874 AUC: 0.8786
+dsafasdf
+
+28.11.2019 10.14AM
+Number of features: 25
+Features: ['default_profile', 'default_profile_image', 'favourites_count', 'followers', 'following', 'listed_count', 'statuses_count', 'indegree_predecessors', 'indegree_successors', 'outdegree_predecessors', 'outdegree_successors', 'reputation_predecessors', 'reputation_successors', 'favorites_predecessors', 'favorites_successors', 'status_predecessors', 'listed_predecessors', 'listed_successors', 'age_predecessors', 'default_successors', 'default_image_predecessors', 'default_image_successors', 'account_age', 'reputation', 'is_train']
+
+Evaluation
+RF: TPR: 0.8809 FPR: 0.1207 F1 score: 0.889 AUC: 0.8801
+Number of features: 22
+Features: ['default_profile', 'default_profile_image', 'favourites_count', 'followers', 'following', 'listed_count', 'statuses_count', 'indegree_predecessors', 'indegree_successors', 'outdegree_predecessors', 'outdegree_successors', 'reputation_predecessors', 'reputation_successors', 'favorites_predecessors', 'favorites_successors', 'status_predecessors', 'listed_predecessors', 'listed_successors', 'age_predecessors', 'default_successors', 'account_age', 'is_train']
+
+Evaluation
+RF: TPR: 0.882 FPR: 0.1214 F1 score: 0.8893 AUC: 0.8803
+
