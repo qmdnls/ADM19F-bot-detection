@@ -22,7 +22,9 @@ df = pd.read_csv('data/train.csv', encoding='utf8', engine='python', chunksize=N
 # Define features and target
 features = list(df.columns)
 features.remove('label')
-features = ['favourites_count', 'followers', 'statuses_count', 'indegree_successors', 'outdegree_predecessors', 'favorites_predecessors', 'favorites_successors', 'status_predecessors', 'age_predecessors', 'account_age']
+#features = ['favourites_count', 'followers', 'statuses_count', 'indegree_successors', 'outdegree_predecessors', 'favorites_predecessors', 'favorites_successors', 'status_predecessors', 'age_predecessors', 'account_age']
+#features = ['default_profile', 'default_profile_image', 'favourites_count', 'followers', 'following', 'listed_count', 'statuses_count', 'account_age', 'reputation']
+features = ['favourites_count', 'statuses_count', 'indegree_successors', 'outdegree_predecessors', 'favorites_predecessors', 'favorites_successors', 'status_predecessors', 'age_predecessors', 'account_age', 'following', 'listed_count']
 num_features = len(features)
 
 # Standardize the feature data (mean 0, std 1)
@@ -30,7 +32,7 @@ standardize = lambda x: (x-x.mean()) / x.std()
 for feature in features:
     df[feature] = df[feature].pipe(standardize)
 
-x_train, x_test, y_train, y_test = model_selection.train_test_split(df[features], df['label'], test_size=0.1, shuffle=True, stratify=df['label'])
+x_train, x_test, y_train, y_test = model_selection.train_test_split(df[features], df['label'], test_size=0.2, shuffle=True, stratify=df['label'])
 
 print(x_train.shape)
 
@@ -72,14 +74,14 @@ class Net(nn.Module):
         return out
 
 net = Net(num_features)
-opt = optim.Adam(net.parameters(), lr=1e-3, betas=(0.9, 0.999))
+opt = optim.Adam(net.parameters(), lr=1e-3, betas=(0.9, 0.999), weight_decay=1e-3)
 criterion = nn.BCEWithLogitsLoss(pos_weight=torch.Tensor([0.81]))
 
 # gamma = decaying factor
 #scheduler = StepLR(opt, step_size=5, gamma=0.975)
 
 y_t = y_test.unsqueeze(dim=1)
-def train_epoch(model, x, y, opt, criterion, batch_size=16):
+def train_epoch(model, x, y, opt, criterion, batch_size=3000):
     model.train()
     losses = []
     valid_losses = []
@@ -118,7 +120,7 @@ def train_epoch(model, x, y, opt, criterion, batch_size=16):
 e_losses = []
 v_losses = []
 e_scores = []
-num_epochs = 750
+num_epochs = 1250
 
 for e in range(num_epochs):
     # Progress

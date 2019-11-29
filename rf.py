@@ -10,12 +10,12 @@ from sklearn import svm
 np.random.seed(0)
 
 print("Loading dataset...")
-df = pd.read_csv('data/train.csv', encoding='utf8', engine='python', chunksize=None)
+df = pd.read_csv('data/train_graph.csv', encoding='utf8', engine='python', chunksize=None)
 
 # Define features and target
 features = list(df.columns)
 features.remove('label')
-features = ['favourites_count', 'followers', 'statuses_count', 'indegree_successors', 'outdegree_predecessors', 'favorites_predecessors', 'favorites_successors', 'status_predecessors', 'age_predecessors', 'account_age', 'listed_predecessors', 'reputation']
+features = ['favourites_count', 'followers', 'statuses_count', 'outdegree_predecessors', 'favorites_predecessors', 'favorites_successors', 'status_predecessors', 'age_predecessors', 'account_age', 'ego_nodes', 'ego_edges', 'ego_density', 'ego_reciprocity']
 
 x_train, x_test, y_train, y_test = model_selection.train_test_split(df[features], df['label'], test_size=0.1, shuffle=True, stratify=df['label'])
 
@@ -23,7 +23,7 @@ print("Number of features:", len(features))
 print("Features:", features)
 print("")
 
-# Random For3t
+# Random Forest
 rf = sk.RandomForestClassifier(n_jobs=2, random_state=0, n_estimators=100, bootstrap=True, class_weight=None, criterion='gini',max_depth=15, max_features=3, max_leaf_nodes=None, min_samples_leaf=1, min_samples_split=2, min_weight_fraction_leaf=0.0, oob_score=False, verbose=0, warm_start=False)
 rf.fit(x_train, y_train)
 rf_pred = rf.predict(x_test)

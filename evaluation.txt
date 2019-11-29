@@ -9,6 +9,7 @@ NN: TPR: 0.8383 FPR: 0.179 F1 score: 0.8434 AUC: 0.8297 (standardized)
 
 With neigborhood features:
 RF: TPR: 0.878 FPR: 0.1261 F1 score: 0.8853 AUC: 0.876
+RF: TPR: 0.8959 FPR: 0.133 F1 score: 0.8908 AUC: 0.8814
 NN: TPR: 0.8145 FPR: 0.1641 F1 score: 0.8346 AUC: 0.8252
 NN: TPR: 0.835 FPR: 0.2032 F1 score: 0.8303 AUC: 0.8159
 NN: TPR: 0.8522 FPR: 0.2018 F1 score: 0.8407 AUC: 0.8252

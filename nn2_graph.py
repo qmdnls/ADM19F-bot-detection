@@ -13,7 +13,7 @@ from torch.optim.lr_scheduler import StepLR
 
 np.random.seed(0)
 
-df = pd.read_csv('data/train.csv', encoding='utf8', engine='python', chunksize=None)
+df = pd.read_csv('data/train_graph.csv', encoding='utf8', engine='python', chunksize=None)
 
 # FEATURES
 # 'default_profile', 'default_profile_image', 'favourites_count', 'followers', 'following', 'label', 'listed_count', 'statuses_count', 'indegree_predecessors', 'indegree_successors', 'outdegree_predecessors', 'outdegree_successors', 'reputation_predecessors', 'reputation_successors', 'favorites_predecessors', 'favorites_successors', 'status_predecessors', 'status_successors', 'listed_predecessors', 'listed_successors', 'age_predecessors', 'age_successors', 'default_predecessors', 'default_successors', 'default_image_predecessors', 'default_image_successors', 'account_age', 'reputation'
@@ -22,7 +22,7 @@ df = pd.read_csv('data/train.csv', encoding='utf8', engine='python', chunksize=N
 # Define features and target
 features = list(df.columns)
 features.remove('label')
-features = ['favourites_count', 'followers', 'statuses_count', 'indegree_successors', 'outdegree_predecessors', 'favorites_predecessors', 'favorites_successors', 'status_predecessors', 'age_predecessors', 'account_age']
+features = ['favourites_count', 'following', 'followers', 'account_age', 'statuses_count', 'indegree_successors', 'outdegree_predecessors', 'favorites_predecessors', 'favorites_successors', 'status_predecessors', 'account_age', 'ego_nodes', 'ego_edges', 'ego_reciprocity', 'ego_density', 'ego_assortativity']
 num_features = len(features)
 
 # Standardize the feature data (mean 0, std 1)
@@ -30,7 +30,7 @@ standardize = lambda x: (x-x.mean()) / x.std()
 for feature in features:
     df[feature] = df[feature].pipe(standardize)
 
-x_train, x_test, y_train, y_test = model_selection.train_test_split(df[features], df['label'], test_size=0.1, shuffle=True, stratify=df['label'])
+x_train, x_test, y_train, y_test = model_selection.train_test_split(df[features], df['label'], test_size=0.2, shuffle=True, stratify=df['label'])
 
 print(x_train.shape)
 
@@ -59,10 +59,10 @@ class Net(nn.Module):
         self.fc2 = nn.Linear(500, 200)
         self.pr2 = nn.PReLU()
         self.bn2 = nn.BatchNorm1d(200)
-        self.fc3 = nn.Linear(200, 200)
+        self.fc3 = nn.Linear(200, 100)
         self.pr3 = nn.PReLU()
-        self.bn3 = nn.BatchNorm1d(200)
-        self.out = nn.Linear(200, 1)
+        self.bn3 = nn.BatchNorm1d(100)
+        self.out = nn.Linear(100, 1)
 
     def forward(self, input_):
         out = self.dout(self.bn1(self.pr1(self.fc1(input_))))
@@ -72,14 +72,14 @@ class Net(nn.Module):
         return out
 
 net = Net(num_features)
-opt = optim.Adam(net.parameters(), lr=1e-3, betas=(0.9, 0.999))
-criterion = nn.BCEWithLogitsLoss(pos_weight=torch.Tensor([0.78]))
+opt = optim.Adam(net.parameters(), lr=1e-3, betas=(0.9, 0.999), weight_decay=1e-2)
+criterion = nn.BCEWithLogitsLoss(pos_weight=torch.Tensor([0.81]))
 
 # gamma = decaying factor
 #scheduler = StepLR(opt, step_size=15, gamma=0.975)
 
 y_t = y_test.unsqueeze(dim=1)
-def train_epoch(model, x, y, opt, criterion, batch_size=16):
+def train_epoch(model, x, y, opt, criterion, batch_size=5000):
     model.train()
     losses = []
     valid_losses = []
@@ -118,7 +118,7 @@ def train_epoch(model, x, y, opt, criterion, batch_size=16):
 e_losses = []
 v_losses = []
 e_scores = []
-num_epochs = 1500
+num_epochs = 1000
 
 for e in range(num_epochs):
     # Progress

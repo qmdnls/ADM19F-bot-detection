@@ -9,7 +9,7 @@ def load_dataset(filename):
     return pd.read_csv(filename, encoding='utf8', engine='python', chunksize=None)
 
 print("Loading dataset...")
-df = load_dataset("data/users.csv")
+df = load_dataset("data/users_neighborhood.csv")
 
 print("Preprocessing data...")
 
@@ -34,10 +34,11 @@ df = df.drop(['created_at', 'description', 'followers_list', 'following_list', '
 # Add reputation column
 df['reputation'] = df['following'].divide(df['following'].add(df['followers']))
 df['reputation'] = df['reputation'].fillna(0)
+df['ego_assortativity'] = df['ego_assortativity'].fillna(0)
 
 print(df)
 
-df.to_csv("data/train_baseline.csv", index=None, header=True)
+df.to_csv("data/train_graph.csv", index=None, header=True)
 
 # Show correlation matrix
 corr = df.corr()

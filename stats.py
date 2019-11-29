@@ -192,7 +192,7 @@ for idx, user in enumerate(users):
         ego_reciprocity[user] = nx.reciprocity(ego)
     except:
         ego_reciprocity[user] = 0
-    #ego_assortativity[user] = nx.attribute_assortativity_coefficient(ego, "followers")
+    ego_assortativity[user] = nx.attribute_assortativity_coefficient(ego, "followers")
 
 data = [indegree_predecessors, indegree_successors, outdegree_predecessors, outdegree_successors, reputation_predecessors, reputation_successors, favorites_predecessors, favorites_successors, status_predecessors, status_successors, listed_predecessors, listed_successors, age_predecessors, age_successors, default_predecessors, default_successors, default_image_predecessors, default_image_successors, ego_nodes, ego_edges, ego_density, ego_reciprocity, ego_assortativity]
 

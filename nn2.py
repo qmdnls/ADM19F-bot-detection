@@ -32,13 +32,12 @@ for feature in features:
 
 x_train, x_test, y_train, y_test = model_selection.train_test_split(df[features], df['label'], test_size=0.1, shuffle=True, stratify=df['label'])
 
-print(x_train.shape)
-
+# Remove outliers from training data
 z = np.abs(stats.zscore(x_train))
 x_train = x_train[(z < 3).all(axis=1)]
 y_train = y_train[(z < 3).all(axis=1)]
 
-print(x_train.shape)
+print("Training set shape:", x_train.shape)
 
 
 print(df[features].head())
