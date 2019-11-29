@@ -87,6 +87,12 @@ default_predecessors = {}
 default_successors = {}
 default_image_predecessors = {}
 default_image_successors = {}
+# Create dicts for graph features
+ego_edges = {}
+ego_nodes = {}
+ego_density = {}
+ego_reciprocity = {}
+ego_assortativity = {}
 
 # For each user, get the successor and predecessor features as a list so we can calculate the median and use that
 time = time.time()
@@ -167,6 +173,7 @@ for idx, user in enumerate(users):
     for feature in features:
         if (len(feature) == 0):
             feature.append(0)
+    # Set neighborhood features
     indegree_predecessors[user] = statistics.median(ind) 
     outdegree_predecessors[user] = statistics.median(outd)
     reputation_predecessors[user] = statistics.median(rep)
@@ -176,8 +183,18 @@ for idx, user in enumerate(users):
     age_predecessors[user] = statistics.median(age)
     default_predecessors[user] = statistics.median(default)
     default_image_predecessors[user] = statistics.median(default_image)
+    # Set graph features
+    ego = nx.ego_graph(G, user)
+    ego_nodes[user] = ego.number_of_nodes()
+    ego_edges[user] = ego.number_of_edges()
+    ego_density[user] = nx.density(ego)
+    try:
+        ego_reciprocity[user] = nx.reciprocity(ego)
+    except:
+        ego_reciprocity[user] = 0
+    #ego_assortativity[user] = nx.attribute_assortativity_coefficient(ego, "followers")
 
-data = [indegree_predecessors, indegree_successors, outdegree_predecessors, outdegree_successors, reputation_predecessors, reputation_successors, favorites_predecessors, favorites_successors, status_predecessors, status_successors, listed_predecessors, listed_successors, age_predecessors, age_successors, default_predecessors, default_successors, default_image_predecessors, default_image_successors]
+data = [indegree_predecessors, indegree_successors, outdegree_predecessors, outdegree_successors, reputation_predecessors, reputation_successors, favorites_predecessors, favorites_successors, status_predecessors, status_successors, listed_predecessors, listed_successors, age_predecessors, age_successors, default_predecessors, default_successors, default_image_predecessors, default_image_successors, ego_nodes, ego_edges, ego_density, ego_reciprocity, ego_assortativity]
 
 with open('data/neighbor.data', 'wb') as filehandle:
     # store the data as binary data stream
@@ -186,7 +203,7 @@ with open('data/neighbor.data', 'wb') as filehandle:
 # Read the data like this:
 # with open('data/neighbor.data', 'rb') as filehandle:
 #     data = pickle.load(filehandle)
-#     indegree_predecessors_data, indegree_successors_data, outdegree_predecessors_data, outdegree_successors_data, reputation_predecessors_data, reputation_successors_data, favorites_predecessors_data, favorites_successors_data, status_predecessors_data, status_successors_data, listed_predecessors_data, listed_successors_data, age_predecessors_data, age_successors_data, default_predecessors_data, default_successors_data, default_image_predecessors_data, default_image_successors_data = tuple(data)
+#     indegree_predecessors_data, indegree_successors_data, outdegree_predecessors_data, outdegree_successors_data, reputation_predecessors_data, reputation_successors_data, favorites_predecessors_data, favorites_successors_data, status_predecessors_data, status_successors_data, listed_predecessors_data, listed_successors_data, age_predecessors_data, age_successors_data, default_predecessors_data, default_successors_data, default_image_predecessors_data, default_image_successors_data, ego_nodes_data, ego_edges_data, ego_density, ego_reciprocity, ego_assortativity = tuple(data)
 
 del G
 
@@ -195,7 +212,7 @@ df = pd.read_csv("data/users.csv", encoding="utf8")
 df.set_index("user_id")
 
 # Set column names
-features = ("indegree_predecessors", "indegree_successors", "outdegree_predecessors", "outdegree_successors", "reputation_predecessors", "reputation_successors", "favorites_predecessors", "favorites_successors", "status_predecessors", "status_successors", "listed_predecessors", "listed_successors", "age_predecessors", "age_successors", "default_predecessors", "default_successors", "default_image_predecessors", "default_image_successors")
+features = ("indegree_predecessors", "indegree_successors", "outdegree_predecessors", "outdegree_successors", "reputation_predecessors", "reputation_successors", "favorites_predecessors", "favorites_successors", "status_predecessors", "status_successors", "listed_predecessors", "listed_successors", "age_predecessors", "age_successors", "default_predecessors", "default_successors", "default_image_predecessors", "default_image_successors", "ego_edges", "ego_nodes", "ego_density", "ego_reciprocity", "ego_assortativity")
 d = dict(zip(features, tuple(data)))
 
 print("Merge neighborhood features into training dataset...")
