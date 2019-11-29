@@ -1,0 +1,35 @@
+'default_profile', 'default_profile_image', 'favourites_count', 'followers', 'following', 'listed_count', 'statuses_count', 'indegree_predecessors', 'indegree_successors', 'outdegree_predecessors', 'outdegree_successors', 'reputation_predecessors', 'reputation_successors', 'favorites_predecessors', 'favorites_successors', 'status_predecessors', 'status_successors', 'listed_predecessors', 'listed_successors', 'age_predecessors', 'age_successors', 'default_predecessors', 'default_successors', 'default_image_predecessors', 'default_image_successors', 'account_age', 'reputation', 'ego_nodes', 'ego_reciprocity', 'ego_density', 'ego_assortativity'
+NN: Acc: 0.7301 TPR: 0.712 FPR: 0.249 F1 score: 0.7385 AUC: 0.7315
+
+'default_profile', 'default_profile_image', 'favourites_count', 'followers', 'following', 'listed_count', 'statuses_count', 'account_age', 'reputation'
+NN: Acc: 0.77 TPR: 0.7955 FPR: 0.2594 F1 score: 0.7874 AUC: 0.768
+
+'favourites_count', 'followers', 'statuses_count', 'indegree_successors', 'outdegree_predecessors', 'favorites_predecessors', 'favorites_successors', 'status_predecessors', 'age_predecessors', 'account_age' (BEST)
+NN: Acc: 0.7703 TPR: 0.8472 FPR: 0.3182 F1 score: 0.798 AUC: 0.7645
+NN: Acc: 0.8504 TPR: 0.8345 FPR: 0.1314 F1 score: 0.8565 AUC: 0.8516 (diff arch)
+NN: Acc: 0.8481 TPR: 0.8845 FPR: 0.1938 F1 score: 0.8617 AUC: 0.8453 (diff arch)
+NN: Acc: 0.8603 TPR: 0.8887 FPR: 0.1724 F1 score: 0.8719 AUC: 0.8582 (diff arch)
+NN: Acc: 0.8687 TPR: 0.8987 FPR: 0.1658 F1 score: 0.8799 AUC: 0.8664 (diff arch)
+
+'favourites_count', 'followers', 'statuses_count', 'favorites_predecessors', 'favorites_successors', 'age_predecessors', 'account_age'
+NN: Acc: 0.7587 TPR: 0.8419 FPR: 0.3372 F1 score: 0.7889 AUC: 0.7524
+
+'indegree_predecessors', 'indegree_successors', 'outdegree_predecessors', 'outdegree_successors', 'reputation_predecessors', 'reputation_successors', 'favorites_predecessors', 'favorites_successors', 'status_predecessors', 'status_successors', 'listed_predecessors', 'listed_successors', 'age_predecessors', 'age_successors', 'default_predecessors', 'default_successors', 'default_image_predecessors', 'default_image_successors'
+NN: Acc: 0.6598 TPR: 0.6703 FPR: 0.3522 F1 score: 0.6784 AUC: 0.659
+
+'favourites_count', 'followers', 'statuses_count', 'account_age'
+NN: Acc: 0.8038 TPR: 0.7603 FPR: 0.1461 F1 score: 0.8057 AUC: 0.8071
+
+REMOVING FEATURES:
+better arch, using features: best + following + listed_count seems better (batch_size=3000, 500 epochs, pos_weight=0.81)
+NN: Acc: 0.858 TPR: 0.8823 FPR: 0.1701 F1 score: 0.8693 AUC: 0.8561
+NN: Acc: 0.8645 TPR: 0.8823 FPR: 0.1561 F1 score: 0.8745 AUC: 0.8631 (without followers)
+NN: Acc: 0.8614 TPR: 0.873 FPR: 0.152 F1 score: 0.8709 AUC: 0.8605 (without favorites_predecessors)
+NN: Acc: 0.8618 TPR: 0.8809 FPR: 0.1602 F1 score: 0.8722 AUC: 0.8603 (without status_predecessors)
+NN: Acc: 0.8694 TPR: 0.8873 FPR: 0.1512 F1 score: 0.8792 AUC: 0.8681 (without age_predecessors)
+
+n_jobs=2, random_state=0, n_estimators=100, bootstrap=True, class_weight=None, criterion='gini',max_depth=15, max_features=3, max_leaf_nodes=None, min_samples_leaf=1, min_samples_split=2, min_weight_fraction_leaf=0.0, oob_score=False, verbose=0, warm_start=False
+
+FINAL:
+NN: Acc: 0.8667 TPR: 0.878 FPR: 0.1463 F1 score: 0.8758 AUC: 0.8659 (nn2_no_lr_decay, no weight decay!)
+NN: Acc: 0.8656 TPR: 0.8894 FPR: 0.1619 F1 score: 0.8763 AUC: 0.8638 (nn2_no_lr_decay, 1-e4)
