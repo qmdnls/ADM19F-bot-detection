@@ -1,4 +1,15 @@
-We trained a classification model to classify users as $l \in \{\text{human},\text{bot}\}$ using the following features:
+In this section we describe our model and compare it to a number of different baseline models. We implement our model as well as the baselines in Python 3.7 using NumPy, Pandas, Scikit-learn and PyTorch. We split the training data into training and test datasets randomly while ensuring that the distributions of human/bot labels in both datasets represent the overall distribution accurately. 
+
+For the baseline models we use the following features:
+\begin{align*}
+    X = \{ & \texttt{default\_profile}, \texttt{profile\_image}, \texttt{favourites\_count}, \\
+    & \texttt{followers}, \texttt{following}, \texttt{listed\_count}, \texttt{statuses\_count}, \\
+    & \texttt{account\_age}, \texttt{reputation} \}
+\end{align*}
+
+We train a Random Forest (RF) model using 100 trees, 
+
+The neural network classifier is a fully-connected feedforward neural network. After much experimentation we chose to use 3 hidden layers with $(500, 200, 100)$ neurons respectively, using batch normalization and dropout with $p=0.5$. The model is trained using Adam and a learning rate of $\theta = 1e-3$ for 1250 epochs. We find that the model achieves better performance and generalizes better when we remove outliers that deviate from the mean by more than three standard deviations from the training dataset.
 
 \begin{multicols}{2}
 \begin{itemize}
@@ -30,15 +41,17 @@ We trained a classification model to classify users as $l \in \{\text{human},\te
 
 \begin{table}[t]
 \centering
-\begin{tabular}{@{}lcccccc@{}}
+\begin{tabular}{@{}lccccc@{}}
 \toprule
-\textbf{Model}           & \textbf{TPR} & \textbf{FPR}  & \textbf{Acc} & \textbf{F-score} & \textbf{Recall@p95} & \textbf{AUC} \\ \midrule
-Different model & 0.50 & 0.50  & 0.50 & 0.50     & 0.50        & 0.50 \\
-SVM             & 0.50 & 0.50  & 0.50 & 0.50     & 0.50        & 0.50 \\
-Random forest   & 0.50 & 0.50  & 0.50 & 0.50     & 0.50        & 0.50 \\
-NN              & 0.50 & 0.50  & 0.50 & 0.50     & 0.50        & 0.50 \\
-NN + GF         & 0.50 & 0.50  & 0.50 & 0.50     & 0.50        & 0.50 \\
-NN + GF + NF    & \textbf{0.90} & \textbf{0.01} & \textbf{0.90} & \textbf{0.90}     & \textbf{0.90}        & \textbf{0.9} \\ \bottomrule
+\textbf{Model} & \textbf{Acc} & \textbf{TPR} & \textbf{FPR} & \textbf{F-score} & \textbf{AUC} \\ \midrule
+GNB             & 0.6399 & 0.9622 & 0.7313 & 0.741  & 0.6154 \\
+QDA             & 0.6751 & 0.8937 & 0.5768 & 0.7465 & 0.6584 \\
+SVM             & 0.7797 & 0.7746 & 0.2145 & 0.7901 & 0.7801 \\
+KNN             & 0.8496 & 0.8752 & 0.18   & 0.8617 & 0.8476 \\
+Random forest   & 0.8675 & 0.8745 & 0.1405 & 0.876  & 0.867 \\
+NN              & 0.50   & 0.50   & 0.50   & 0.50   & 0.50 \\ \midrule
+NN + NF (ours)  & 0.8656 & 0.8894 & 0.1619 & 0.8763 & 0.8638 \\
+NN + NF + GF (ours) & \textbf{0.90} & \textbf{0.01} & \textbf{0.90} & \textbf{0.90} & \textbf{0.90} \\ \bottomrule
 \end{tabular}
 \caption{Placeholder evaluation results}
 \label{tab:results}
