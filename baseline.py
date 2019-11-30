@@ -44,7 +44,7 @@ knn.fit(x_train, y_train)
 knn_pred = knn.predict(x_test)
 
 # Random Forest
-rf = ensemble.RandomForestClassifier(n_jobs=2, random_state=0, n_estimators=100, bootstrap=True, class_weight=None, criterion="gini",max_depth=None, max_features="auto", max_leaf_nodes=None, min_samples_leaf=1, min_samples_split=2, min_weight_fraction_leaf=0.0, oob_score=False, verbose=0, warm_start=False)
+rf = ensemble.RandomForestClassifier(n_jobs=-1, random_state=0, n_estimators=100, bootstrap=True, class_weight=None, criterion="gini",max_depth=None, max_features="auto", max_leaf_nodes=None, min_samples_leaf=1, min_samples_split=2, min_weight_fraction_leaf=0.0, oob_score=False, verbose=0, warm_start=False)
 rf.fit(x_train, y_train)
 rf_pred = rf.predict(x_test)
 
@@ -64,7 +64,7 @@ qda = qda.fit(x_train, y_train)
 qda_pred = qda.predict(x_test)
 
 # Gaussian Process
-gp = GaussianProcessClassifier(1.0 * RBF(1.0))
+#gp = GaussianProcessClassifier(1.0 * RBF(1.0))
 #gp.fit(x_train, y_train)
 #gp_pred = gp.predict(x_test)
 

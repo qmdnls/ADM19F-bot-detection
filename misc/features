@@ -31,5 +31,9 @@ NN: Acc: 0.8694 TPR: 0.8873 FPR: 0.1512 F1 score: 0.8792 AUC: 0.8681 (without ag
 n_jobs=2, random_state=0, n_estimators=100, bootstrap=True, class_weight=None, criterion='gini',max_depth=15, max_features=3, max_leaf_nodes=None, min_samples_leaf=1, min_samples_split=2, min_weight_fraction_leaf=0.0, oob_score=False, verbose=0, warm_start=False
 
 FINAL:
-NN: Acc: 0.8667 TPR: 0.878 FPR: 0.1463 F1 score: 0.8758 AUC: 0.8659 (nn2_no_lr_decay, no weight decay!)
-NN: Acc: 0.8656 TPR: 0.8894 FPR: 0.1619 F1 score: 0.8763 AUC: 0.8638 (nn2_no_lr_decay, 1-e4)
+NN + NF: Acc: 0.8667 TPR: 0.878 FPR: 0.1463 F1 score: 0.8758 AUC: 0.8659 (nn2_no_lr_decay, no weight decay!)
+NN + NF: Acc: 0.8656 TPR: 0.8894 FPR: 0.1619 F1 score: 0.8763 AUC: 0.8638 (nn2_no_lr_decay, 1-e4)
+NN + NF: Acc: 0.8683 TPR: 0.8816 FPR: 0.1471 F1 score: 0.8775 AUC: 0.8673
+NN + NF: Acc: 0.8702 TPR: 0.8623 FPR: 0.1208 F1 score: 0.8767 AUC: 0.8708 ('favourites_count', 'statuses_count', 'following', 'followers', 'favorites_predecessors', 'outdegree_predecessors', 'account_age')
+NN + GF: Acc: 0.8706 TPR: 0.878 FPR: 0.138 F1 score: 0.879 AUC: 0.87 (ego_assortativity)
+NN + GF: Acc: 0.8725 TPR: 0.883 FPR: 0.1397 F1 score: 0.8811 AUC: 0.8717 (ego_reciprocity)
