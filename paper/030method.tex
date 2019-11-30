@@ -58,7 +58,7 @@ Given this data we perform some basic analysis. When plotting the in-degree-coun
     \begin{subfigure}[t]{0.5\textwidth}
         \centering
         \includegraphics[width=\textwidth]{FIG/indegrees.pdf}
-        \caption{In-degree count-graph}
+        \caption{In-degree-count graph}
     \end{subfigure}%
     ~
     \begin{subfigure}[t]{0.5\textwidth}
@@ -114,46 +114,6 @@ We introduce a novel graph topology and neighborhood-based approach to bot detec
 
 We will first compute such aggregate features for the dataset using the social graph. In addition to the features scraped using the Twitter API, we computed and evaluated the following features during our analysis. An aggregate of a  feature for a user's neighborhood (a \emph{neighborhood feature}) can be computed by taking the median value across all predecessors or successors (see figure~\ref{fig:reputation}). An aggregate of this measure can be computed across all predecessors/successors by taking the median (see figure~\ref{fig:reputation}).
 
-\paragraph{Reputation.} A user's reputation is often measured as the following/follower ratio. We define the reputation $r$ of a user $u$ by
-\begin{align*}
-    r_u = \frac{ |u_\text{followers}| }{ |u_\text{followers}| + |u_\text{following}|}.
-\end{align*}
-
-\paragraph{Median indegree.} We compute median indegree of successors and the median indegree of predecessors. Intuitively, we believe humans tend to follow more high-indegree users (i.e.) news sites, celebrities, while being followed by other low-indegree users.
-
-\paragraph{Median outdegree.} We compute median outdegree of successors and the median outdegree of predecessors. The intuition is that bots may be more likely to be followed by bots or users that follow a large amount of people.
-
-\paragraph{Median reputation.} The above measure of reputation, that is $r_u = \frac{ |u_\text{followers}| }{ |u_\text{followers}| + |u_\text{following}|}$, aggregated for predecessors and successors in the social graph each. Intuitively, real accounts 
-
-\paragraph{Median status count.} Median of status updates for predecessors and successors in the social graph.
-
-\paragraph{Median favourites count.} Median number of favourites or likes by a user's predecessors and successors.
-
-\paragraph{Median listed count.} Median number of times a user's predecessors and successors appear in other users lists on Twitter.
-
-\paragraph{Median account age.} The median account age of predecessors and successors in the social graph. Intuitively, older accounts tend to be more likely to be real users whereas recently created accounts may be bot accounts.
-
-\paragraph{A}
-
-\paragraph{Number of egograph edges.} The total number of edges in a user's egograph. Used to measure how connected the egograph is.
-
-\paragraph{Number of egograph nodes.} The total number of nodes in a user's egograph. Used to measure how connected a user is in the social graph.
-
-\paragraph{Reciprocity.} We measure reciprocity in each user's egograph by computing the ratio of edges that are reciprocated (i.e. that point in both directions) to the total number of edges in the egograph. That is:
-\begin{align*}
-    \frac{|\{(u,v) \ | \ (u,v) \in E \wedge (v,u) \in E \}|}{|\{ (u,v) \ | \ (u,v) \in E \}|}
-\end{align*}
-
-\paragraph{Assortativity.} Degree assortativity
-
-\paragraph{Density.} Test
-
-\bigskip
-
-We find that overall successors appear to have a higher reputation than predecessors. This observation makes sense as many users follow high-degree, high-reputation nodes such as news sources, which in turn are not likely to be following them back. We can also make the observation that human nodes tend to have more reputable predecessors. Additionally, the distribution of reputation of successors is extremely skewed to both extremes for bots which indicates most of them they either follow very reputable nodes or nodes with very low reputation. While the distribution is also extreme for humans, it is not skewed quite as strongly and has many more nodes with a reputation $0.1 < r < 0.9$.
-
-When looking at the cumulative degree distribution among predecessors (figure~\ref{fig:cum_degrees_predecessors}) and successors (figure~\ref{fig:cum_degrees_successors}) we find that many bot accounts in the dataset have predecessors with very high in-degree and out-degree whereas most genuine accounts seem to have lower predecessor degree distributions. For successors however, human accounts tend to have successors with a higher in-degree and lower out-degree, which is in line with our observations regarding the reputation and again indicating that human users tend to follow more accounts with many followers such as news accounts or celebrities. 
-
 % DEGREE PREDECESSORS
 \begin{figure}[t!]
     \centering
@@ -189,6 +149,48 @@ When looking at the cumulative degree distribution among predecessors (figure~\r
     \caption{Cumulative aggregated degree distribution of successors nodes, i.e. median degree of users followed by a given user over all bot and human accounts.}
     \label{fig:cum_degrees_successors}
 \end{figure}
+
+\paragraph{Reputation.} A user's reputation is often measured as the following/follower ratio. We define the reputation $r$ of a user $u$ by
+\begin{align*}
+    r_u = \frac{ |u_\text{followers}| }{ |u_\text{followers}| + |u_\text{following}|}.
+\end{align*}
+
+\paragraph{Median indegree.} We compute median indegree of successors and the median indegree of predecessors. Intuitively, we believe humans tend to follow more high-indegree users (i.e.) news sites, celebrities, while being followed by other low-indegree users.
+
+\paragraph{Median outdegree.} We compute median outdegree of successors and the median outdegree of predecessors. The intuition is that bots may be more likely to be followed by bots or users that follow a large amount of people.
+
+\paragraph{Median reputation.} The above measure of reputation, that is $r_u = \frac{ |u_\text{followers}| }{ |u_\text{followers}| + |u_\text{following}|}$, aggregated for predecessors and successors in the social graph each. Intuitively, real accounts 
+
+\paragraph{Median status count.} Median of status updates for predecessors and successors in the social graph.
+
+\paragraph{Median favourites count.} Median number of favourites or likes by a user's predecessors and successors.
+
+\paragraph{Median listed count.} Median number of times a user's predecessors and successors appear in other users lists on Twitter.
+
+\paragraph{Median account age.} The median account age of predecessors and successors in the social graph. Intuitively, older accounts tend to be more likely to be real users whereas recently created accounts may be bot accounts.
+
+\paragraph{Number of egograph edges.} The total number of edges in a user's egograph. Used to measure how connected the egograph is.
+
+\paragraph{Number of egograph nodes.} The total number of nodes in a user's egograph. Used to measure how connected a user is in the social graph.
+
+\paragraph{Density.} The density of a user's egograph. A graph's density describes the number of edges in relation to the number of nodes. A complete graph has density 1 while a graph with an empty set of edges has density 0. For $n$ nodes and $m$ edges, it is computed as
+\begin{align*}
+    d = \frac{m}{n(n-1)}.
+\end{align*}
+
+\paragraph{Reciprocity.} We measure reciprocity in each user's egograph by computing the ratio of edges that are reciprocated (i.e. that point in both directions) to the total number of edges in the egograph. That is
+\begin{align*}
+   \mathrm{rec}_G = \frac{|\{(u,v) \ | \ (u,v) \in E \wedge (v,u) \in E \}|}{|\{ (u,v) \ | \ (u,v) \in E \}|}
+\end{align*}
+
+\paragraph{Assortativity.} A graph's assortativity measures the similarity of nodes in a graph given a certain attribute. In this case we choose to use ( indegree assortativity (i.e. follower assortativity) to describe how similar a user's egograph is in terms of indegrees.
+
+
+\bigskip
+
+We find that overall successors appear to have a higher reputation than predecessors. This observation makes sense as many users follow high-degree, high-reputation nodes such as news sources, which in turn are not likely to be following them back. We can also make the observation that human nodes tend to have more reputable predecessors. Additionally, the distribution of reputation of successors is extremely skewed to both extremes for bots which indicates most of them they either follow very reputable nodes or nodes with very low reputation. While the distribution is also extreme for humans, it is not skewed quite as strongly and has many more nodes with a reputation $0.1 < r < 0.9$.
+
+When looking at the cumulative degree distribution among predecessors (figure~\ref{fig:cum_degrees_predecessors}) and successors (figure~\ref{fig:cum_degrees_successors}) we find that many bot accounts in the dataset have predecessors with very high in-degree and out-degree whereas most genuine accounts seem to have lower predecessor degree distributions. For successors however, human accounts tend to have successors with a higher in-degree and lower out-degree, which is in line with our observations regarding the reputation and again indicating that human users tend to follow more accounts with many followers such as news accounts or celebrities. 
 
 %\noindent
 %\textit{Logistic regression.} Given a set of $m$ trainings samples $S = \{ (x^{(i)}, y^{(i)}) \}_{i=1}^m$ where $x^{(i)}$ responds to the input features and $y^{(i)}$ in $\{ 0,1 \}$ to the labels, we can model logistic regression as
