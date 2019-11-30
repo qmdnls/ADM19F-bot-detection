@@ -41,7 +41,9 @@ print(df)
 df.to_csv("data/train_graph.csv", index=None, header=True)
 
 # Show correlation matrix
+plt.figure(figsize=(30,20))
 corr = df.corr()
-corr.style.background_gradient(cmap='coolwarm').set_precision(2)
-ax = sns.heatmap(corr,xticklabels=corr.columns.values,yticklabels=corr.columns.values)
+palette = sns.diverging_palette(0, 255, sep=1, n=256)
+ax = sns.heatmap(round(corr, 2),xticklabels=corr.columns.values,yticklabels=corr.columns.values, annot=True, cmap=palette, fmt=".2f", square=True)
+plt.savefig("paper/FIG/corr.pdf")
 plt.show()
