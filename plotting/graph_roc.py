@@ -52,4 +52,4 @@ plt.title('Receiver operating characteristic curve')
 plt.legend(loc="lower right")
 
 plt.show()
-fig.savefig('../FIG/roc.pdf', dpi=300)
+plt.savefig('../FIG/roc.pdf', dpi=300)
