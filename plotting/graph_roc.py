@@ -34,7 +34,7 @@ plt.figure()
 lw = 2
 plt.plot(knn_fpr, knn_tpr, color='gold', lw=lw, label='KNN (AUC = %0.2f)' % knn_auc)
 plt.plot(rf_fpr, rf_tpr, color='lightcoral', lw=lw, label='RF (AUC = %0.2f)' % rf_auc)
-plt.plot(svm_fpr, svm_tpr, color='lightseagreen', lw=lw, label='SVM curve (area = %0.2f)' % svm_auc)
+plt.plot(svm_fpr, svm_tpr, color='lightseagreen', lw=lw, label='SVM (area = %0.2f)' % svm_auc)
 plt.plot(gnb_fpr, gnb_tpr, color='deeppink', lw=lw, label='GNB (AUC = %0.2f)' % gnb_auc)
 plt.plot(qda_fpr, qda_tpr, color='black', lw=lw, label='QDA (AUC = %0.2f)' % qda_auc)
 plt.plot(nn_fpr, nn_tpr, color='crimson', lw=lw, label='NN + NF + GF (AUC = %0.2f)' % nn_auc)
