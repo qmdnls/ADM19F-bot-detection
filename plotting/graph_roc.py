@@ -51,5 +51,5 @@ plt.ylabel('True Positive Rate')
 plt.title('Receiver operating characteristic curve')
 plt.legend(loc="lower right")
 
+plt.savefig('../paper/FIG/roc.pdf', dpi=300)
 plt.show()
-plt.savefig('../FIG/roc.pdf', dpi=300)
