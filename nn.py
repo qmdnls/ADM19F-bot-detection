@@ -139,7 +139,7 @@ nn_prob = nn_prob.squeeze(dim=1).detach().numpy()
 nn_pred = nn_pred.squeeze(dim=1).detach().numpy()
 print(nn_pred)
 nn_fpr, nn_tpr, _ = metrics.roc_curve(y_test, nn_pred)
-nn_fpr_array, nn_tpr_array, _ = metrics.roc_curve(y_test, nn_prob[:,1])
+nn_fpr_array, nn_tpr_array, _ = metrics.roc_curve(y_test, nn_prob)
 nn_auc = metrics.roc_auc_score(y_test, nn_prob)
 print("NN:", "Acc:", round(metrics.accuracy_score(y_test, nn_pred), 4), "TPR:", round(nn_tpr[1], 4), "FPR:", round(nn_fpr[1], 4), "F1 score:", round(metrics.f1_score(y_test, nn_pred), 4), "AUC:", round(nn_auc, 4))
 
