@@ -27,13 +27,11 @@ for feature in features:
 
 x_train, x_test, y_train, y_test = model_selection.train_test_split(df[features], df['label'], test_size=0.2, shuffle=True, stratify=df['label'])
 
-print(x_train.shape)
-
 z = np.abs(stats.zscore(x_train))
 x_train = x_train[(z < 3).all(axis=1)]
 y_train = y_train[(z < 3).all(axis=1)]
 
-print(x_train.shape)
+print("Training set shape:", x_train.shape)
 
 
 print(df[features].head())
@@ -109,7 +107,7 @@ def train_epoch(model, x, y, opt, criterion, batch_size=6000):
 e_losses = []
 v_losses = []
 e_scores = []
-num_epochs = 750
+num_epochs = 500
 
 for e in range(num_epochs):
     # Progress
