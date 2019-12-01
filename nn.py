@@ -14,11 +14,12 @@ from torch.optim.lr_scheduler import StepLR
 
 np.random.seed(0)
 
-df = pd.read_csv('data/train_baseline.csv', encoding='utf8', engine='python', chunksize=None)
+df = pd.read_csv('data/train_graph.csv', encoding='utf8', engine='python', chunksize=None)
 
 # Define features and target
 features = list(df.columns)
 features.remove('label')
+features = ['favourites_count', 'statuses_count', 'following', 'followers', 'favorites_predecessors', 'outdegree_predecessors', 'account_age', 'ego_reciprocity']
 num_features = len(features)
 
 # Standardize the feature data (mean 0, std 1)
@@ -33,7 +34,6 @@ x_train = x_train[(z < 3).all(axis=1)]
 y_train = y_train[(z < 3).all(axis=1)]
 
 print("Training set shape:", x_train.shape)
-
 
 print(df[features].head())
 
@@ -69,6 +69,9 @@ net = Net(num_features)
 opt = optim.Adam(net.parameters(), lr=1e-3, betas=(0.9, 0.999), weight_decay=1e-4)
 criterion = nn.BCEWithLogitsLoss(pos_weight=torch.Tensor([0.81]))
 
+# gamma = decaying factor
+#scheduler = StepLR(opt, step_size=400, gamma=0.975)
+
 y_t = y_test.unsqueeze(dim=1)
 def train_epoch(model, x, y, opt, criterion, batch_size=6000):
     model.train()
@@ -103,6 +106,7 @@ def train_epoch(model, x, y, opt, criterion, batch_size=6000):
             scores.append(metrics.f1_score(y_test, pred))
             model.train()
     
+    #scheduler.step()
     return losses, valid_losses, scores
 
 e_losses = []
@@ -141,5 +145,5 @@ print("NN:", "Acc:", round(metrics.accuracy_score(y_test, nn_pred), 4), "TPR:", 
 
 data = [nn_fpr_array, nn_tpr_array, nn_auc]
 
-with open('data/roc_nn_baseline.data', 'wb') as filehandle:
+with open('data/roc_nn.data', 'wb') as filehandle:
     pickle.dump(data, filehandle)

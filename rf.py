@@ -4,6 +4,7 @@ import sklearn.ensemble as sk
 import sklearn.metrics as metrics
 import sklearn.model_selection as model_selection
 import matplotlib.pyplot as plt
+import pickle
 from sklearn import svm
 
 
@@ -27,13 +28,20 @@ print("")
 rf = sk.RandomForestClassifier(n_jobs=-1, random_state=0, n_estimators=100, bootstrap=True, class_weight=None, criterion='gini',max_depth=14, max_features="auto", max_leaf_nodes=None, min_samples_leaf=1, min_samples_split=2, min_weight_fraction_leaf=0.0, oob_score=False, verbose=0, warm_start=False)
 rf.fit(x_train, y_train)
 rf_pred = rf.predict(x_test)
+rf_prob = rf.predict_proba(x_test)
 
 # Evaluation
 rf_fpr, rf_tpr, _ = metrics.roc_curve(y_test, rf_pred)
-rf_auc = metrics.auc(rf_fpr, rf_tpr)
+rf_fpr_array, rf_tpr_array, _ = metrics.roc_curve(y_test, rf_prob[:,1])
+rf_auc = metrics.roc_auc_score(y_test, rf_prob[:,1])
 
 print("Evaluation")
 print("RF:", "Acc:", round(metrics.accuracy_score(y_test, rf_pred), 4), "TPR:", round(rf_tpr[1], 4), "FPR:", round(rf_fpr[1], 4), "F1 score:", round(metrics.f1_score(y_test, rf_pred), 4), "AUC:", round(rf_auc, 4))
+
+data = [rf_fpr_array, rf_tpr_array, rf_auc]
+
+with open('data/roc_rf.data', 'wb') as filehandle:
+    pickle.dump(data, filehandle)
 
 # Plot importance
 importances = rf.feature_importances_

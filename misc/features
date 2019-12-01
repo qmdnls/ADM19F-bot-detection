@@ -37,3 +37,4 @@ NN + NF: Acc: 0.8683 TPR: 0.8816 FPR: 0.1471 F1 score: 0.8775 AUC: 0.8673
 NN + NF: Acc: 0.8702 TPR: 0.8623 FPR: 0.1208 F1 score: 0.8767 AUC: 0.8708 ('favourites_count', 'statuses_count', 'following', 'followers', 'favorites_predecessors', 'outdegree_predecessors', 'account_age')
 NN + GF: Acc: 0.8706 TPR: 0.878 FPR: 0.138 F1 score: 0.879 AUC: 0.87 (ego_assortativity)
 NN + GF: Acc: 0.8725 TPR: 0.883 FPR: 0.1397 F1 score: 0.8811 AUC: 0.8717 (ego_reciprocity)
+NN + GF: Acc: 0.8751 TPR: 0.8894 FPR: 0.1413 F1 score: 0.8841 AUC: 0.8741
