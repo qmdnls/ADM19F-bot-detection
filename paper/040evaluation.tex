@@ -1,5 +1,12 @@
 In this section we describe our model and compare it to a number of different baseline models. We implement our model as well as the baselines in Python 3.7 using NumPy, Pandas, Scikit-learn and PyTorch. We split the training data into training and test datasets randomly while ensuring that the distributions of human/bot labels in both datasets represent the overall distribution accurately.
 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.65\textwidth]{FIG/roc-crop.pdf}
+    \caption{ROC curve for our models and the baseline models}
+    \label{fig:roc}
+\end{figure}
+
 We evaluate the model against Gaussian Naïve Bayes (GNB), Quadratic Discriminant Analysis (QDA), a Support Vector Machine (SVM), a $k$-Nearest Neighbors (KNN), a Random Forest (RF) and a neural network (NN) model. For these baseline models we use the following features:
 \begin{align*}
     X_{base} = \{ & \texttt{default\_profile}, \texttt{profile\_image}, \texttt{favourites\_count}, \\
@@ -7,9 +14,10 @@ We evaluate the model against Gaussian Naïve Bayes (GNB), Quadratic Discriminan
     & \texttt{account\_age}, \texttt{reputation} \}
 \end{align*}
 
+
 After evaluating linear, polynomial and RBF kernels for the SVM model, we found the model to perform best with the RBF kernel. The RF model is trained using 100 trees, and splits are performed according to the Gini coefficient. GNB and QDA models are trained using the standard settings in Scikit-learn. 
 
-The neural network classifier is a fully-connected feedforward neural network. After much experimentation we chose to use 3 hidden layers with $(500, 200, 100)$ neurons respectively, using batch normalization and dropout with $p=0.5$. The model is trained using Adam and a learning rate of $\eta = 0.001$ for 750 epochs. We find that the model achieves better performance and generalizes better when we remove outliers that deviate from the mean by more than three standard deviations from the training dataset.
+The neural network classifier is a fully-connected feedforward neural network. After much experimentation we chose to use 3 hidden layers with $(500, 200, 200)$ neurons respectively, using batch normalization and dropout with $p=0.5$. The model is trained using Adam and a learning rate of $\eta = 0.001$ for 500 epochs. We find that the model achieves better performance and generalizes better when we remove outliers that deviate from the mean by more than three standard deviations from the training dataset.
 
 We experimented with different sets of features and found a set of neighborhood features (NF) and graph features (GF) described in section \ref{sec:approach} that performs best along with the baseline features. We also found that removing some of the original features along with adding the  NF and GF improved the performance of our classification model. The final set of features used in our classifier are:
 \begin{alignat*}{2}
@@ -26,15 +34,15 @@ We experimented with different sets of features and found a set of neighborhood 
 \begin{tabular}{@{}lccccc@{}}
 \toprule
 \textbf{Model} & \textbf{Accuracy} & \textbf{TPR} & \textbf{FPR} & \textbf{$\boldsymbol{F_1}$ score} & \textbf{AUC} \\ \midrule
-GNB             & 0.6399 & \textbf{0.9622} & 0.7313 & 0.741  & 0.6154 \\
-QDA             & 0.6751 & 0.8937 & 0.5768 & 0.7465 & 0.6584 \\
+GNB             & 0.6399 & \textbf{0.9622} & 0.7313 & 0.741  & 0.7652 \\
+QDA             & 0.6751 & 0.8937 & 0.5768 & 0.7465 & 0.6405 \\
 SVM             & 0.7797 & 0.7746 & 0.2145 & 0.7901 & 0.7801 \\
-KNN             & 0.8496 & 0.8752 & 0.18   & 0.8617 & 0.8476 \\
-RF              & 0.8675 & 0.8745 & 0.1405 & 0.876  & 0.867 \\
-NN              & 0.8648 & 0.8673 & 0.138  & 0.8729 & 0.8646 \\ \midrule
-NN + NF (ours)  & 0.8702 & 0.8623 & \textbf{0.1208} & 0.8767 & 0.8708 \\
-NN + NF + GF (ours) & 0.8751 & 0.8894 & 0.1413 & 0.8841 & 0.8741 \\
-RF + NF + GF (ours) & \textbf{0.8774} & 0.888 & 0.1348 & \textbf{0.8858} & \textbf{0.8766} \\
+KNN             & 0.8496 & 0.8752 & 0.18   & 0.8617 & 0.9074 \\
+RF              & 0.8675 & 0.8745 & 0.1405 & 0.876  & 0.9426 \\
+NN              & 0.8648 & 0.8673 & 0.138  & 0.8729 & 0.9154 \\ \midrule
+NN + NF (ours)  & 0.8702 & 0.8623 & \textbf{0.1208} & 0.8767 & 0.928 \\
+NN + NF + GF (ours) & 0.8751 & 0.8894 & 0.1413 & 0.8841 & 0.9367 \\
+RF + NF + GF (ours) & \textbf{0.8774} & 0.888 & 0.1348 & \textbf{0.8858} & \textbf{0.9468} \\
 \bottomrule
 \end{tabular}
 \caption{Results on the \textsc{Cresci-2018} dataset for various baseline models (top) and our model using neighborhood features (bottom).}
@@ -54,9 +62,9 @@ Our model outperforms the baseline models on the \textsc{Cresci-2018} dataset (t
 
 It is interesting to note that only a set of certain, very few features is sufficient to effectively separate bots and humans in multi-dimensional space. We find that the number of a user's favourites, followers and statuses actually suffice to identify very clear differences in the distribution of human and bot accounts (figure \ref{fig:3dvis}). Indeed, a RF classifier is able to achieve an $F_1$ score of 0.8738 and AUC of 0.8659 using only those three features and actually performs better than all of the baseline models which were trained on all features retrieved using the Twitter API.
 
-\begin{figure}
+\begin{figure}[t]
     \centering
-    \includegraphics[width=0.6\textwidth]{paper/FIG/3dvis_base-crop.pdf}
+    \includegraphics[width=0.6\textwidth]{FIG/3dvis_base-crop.pdf}
     \caption{We can clearly see the different distributions of humans (blue) and bots (red). All axes are plotted in log scale.}
     \label{fig:3dvis}
 \end{figure}

@@ -88,6 +88,21 @@ Given this data we perform some basic analysis. When plotting the in-degree-coun
     \label{fig:centrality_clustering}
 \end{figure}
 
+% FAVORITES AND STATUS COUNTS
+\begin{figure}[t!]
+    \centering
+    \begin{subfigure}[t]{0.5\textwidth}
+        \includegraphics{Favorites-count graph}
+        \caption{Caption}
+    \end{subfigure}%
+    ~
+    \begin{subfigure}[t]{0.5\textwidth}
+        \includegraphics{}
+        \caption{Caption}
+    \end{subfigure}%
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
 
 \subsection{Neighborhood-based classification}
 \label{sec:approach}
@@ -192,9 +207,9 @@ We find that overall successors appear to have a higher reputation than predeces
 
 When looking at the cumulative degree distribution among predecessors (figure~\ref{fig:cum_degrees_predecessors}) and successors (figure~\ref{fig:cum_degrees_successors}) we find that many bot accounts in the dataset have predecessors with very high in-degree and out-degree whereas most genuine accounts seem to have lower predecessor degree distributions. For successors however, human accounts tend to have successors with a higher in-degree and lower out-degree, which is in line with our observations regarding the reputation and again indicating that human users tend to follow more accounts with many followers such as news accounts or celebrities. 
 
-%\noindent
-%\textit{Logistic regression.} Given a set of $m$ trainings samples $S = \{ (x^{(i)}, y^{(i)}) \}_{i=1}^m$ where $x^{(i)}$ responds to the input features and $y^{(i)}$ in $\{ 0,1 \}$ to the labels, we can model logistic regression as
-%$$
-%p(y=1|x,\theta) = \frac{1}{1+\text{exp}(-\theta^T x)}
-%$$
-%with model parameters $\theta$.
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{FIG/feature_importance-crop.pdf}
+    \caption{Feature importance of all features, including neighborhood and egograph features}
+    \label{fig:importance}
+\end{figure}
