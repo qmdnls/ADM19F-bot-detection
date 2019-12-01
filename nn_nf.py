@@ -19,7 +19,7 @@ df = pd.read_csv('data/train_graph.csv', encoding='utf8', engine='python', chunk
 # Define features and target
 features = list(df.columns)
 features.remove('label')
-features = ['favourites_count', 'statuses_count', 'following', 'followers', 'favorites_predecessors', 'outdegree_predecessors', 'account_age']
+features = ['favourites_count', 'statuses_count', 'followers', 'favorites_predecessors', 'outdegree_predecessors', 'account_age']
 num_features = len(features)
 
 # Standardize the feature data (mean 0, std 1)
