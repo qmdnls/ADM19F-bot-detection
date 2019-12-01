@@ -1,16 +1,3 @@
-In this section we will briefly describe and analyze the dataset used in this work. In section~\ref{sec:approach} describe our novel approach and how we train the classification model in detail.
-
-% BIG TWITTER HAIRBALL GRAPH
-\begin{figure}[t!]
-    \centering
-    \includegraphics[width=0.5\textwidth]{FIG/graph-crop.pdf}
-    \caption{A visualization of the dataset. Each vertex corresponds to a Twitter user and each edge corresponds to a ``following" relationship between two users. A darker node has a higher degree. We can see many disconnected components.}
-    \label{fig:twitter}
-\end{figure}
-
-\subsection{Dataset}
-For analysis, training and testing we use the labelled data collected in the \textsc{Cresci-2018} dataset~\cite{cresci2018fake}. The dataset contains 25,987 user accounts, each of which is assigned a binary label $l \in \{\text{human},\text{bot}\}$ and is the biggest one of its kind that we are aware of. Due to Twitter's developer policy\footnote{https://developer.twitter.com/en/developer-terms/agreement-and-policy.html} which restricts the ways in which user data collected using the Twitter API may be shared, it is difficult to find sizable high-quality datasets. As the rules allow for profile data to be shared online only under specific circumstances and with imposed restrictions, these datasets of fake accounts are typically shared as a set of (user\_id, label) pairs. The associated accounts can then be retrieved again using the Twitter API at a later time. However, as many of the labelled accounts are bots might have been deleted or changed to a ``protected" status which hides most of the profile information from the public. In our case, even though the dataset is relatively recent, only 13,091 of the originally 25,987 labelled accounts were still available (a reduction of about 49.6\%). Of these 6,082 accounts are labelled to be human and 7,009 accounts are labelled as bots (see table~\ref{tab:dataset}).
-
 \begin{table}[t]
 \centering
 \begin{tabular}{@{}lllllll@{}}
@@ -24,7 +11,22 @@ Bots   &  & 7,009       & 54.54\%     &  & 18,508         & 71.22\%         \\ \
 \label{tab:dataset}
 \end{table}
 
+In this section we will briefly describe and analyze the dataset used in this work. In section~\ref{sec:approach} describe our novel approach and how we train the classification model in detail.
+
+% BIG TWITTER HAIRBALL GRAPH
+\begin{figure}[t!]
+    \centering
+    \includegraphics[width=0.5\textwidth]{FIG/graph-crop.pdf}
+    \caption{A visualization of the dataset. Each vertex corresponds to a Twitter user and each edge corresponds to a ``following" relationship between two users. A darker node has a higher degree. We can see many disconnected components.}
+    \label{fig:twitter}
+\end{figure}
+
+\subsection{Dataset}
+For analysis, training and testing we use the labelled data collected in the \textsc{Cresci-2018} dataset~\cite{cresci2018fake}. The dataset contains 25,987 user accounts, each of which is assigned a binary label $l \in \{\text{human},\text{bot}\}$ and is the biggest one of its kind that we are aware of. Due to Twitter's developer policy\footnote{https://developer.twitter.com/en/developer-terms/agreement-and-policy.html} which restricts the ways in which user data collected using the Twitter API may be shared, it is difficult to find sizable high-quality datasets. As the rules allow for profile data to be shared online only under specific circumstances and with imposed restrictions, these datasets of fake accounts are typically shared as a set of (user\_id, label) pairs. The associated accounts can then be retrieved again using the Twitter API at a later time. However, as many of the labelled accounts are bots might have been deleted or changed to a ``protected" status which hides most of the profile information from the public. In our case, even though the dataset is relatively recent, only 13,091 of the originally 25,987 labelled accounts were still available (a reduction of about 49.6\%). Of these 6,082 accounts are labelled to be human and 7,009 accounts are labelled as bots (see table~\ref{tab:dataset}).
+
+
 In addition to the labelled user accounts we have collected all profiles of users followed by or following a user in the dataset. As the Twitter API limits us to a maximum of the first 5,000 users when retrieving these lists we only get those first 5,000 users for users following or followed by more than 5,000 accounts. Including these user profiles we have a total of 4.6 million user profiles. For each user we have the following attributes:
+
 
 \begin{multicols}{2}
 \begin{itemize}
@@ -50,7 +52,11 @@ In addition to the labelled user accounts we have collected all profiles of user
 
 From this data we can recreate the social graph with distance $d\leq2$ from the users in the \textsc{Cresci-2018} dataset as we have the number of followers and users followed for all users of distance $d=1$ which allows us to simply create ``dummy" nodes without any other attributes in the graph. Unfortunately scraping user profiles of distance $d\geq3$ from the original dataset does not seem feasible for us as this would seem to include a large part of all Twitter accounts and given the Twitter API restrictions might take months. For reference the $90^{th}$-percentile effective diameter of Twitter in 2010 was 4.8~\cite{kwak2010twitter}. A visualization of the graph of all labelled nodes can be seen in figure~\ref{fig:twitter}.
 
-Given this data we perform some basic analysis. When plotting the in-degree-count and out-degree-count graphs we can easily see that bot users tend to have a lower in-degree (less followers) and also a lower out-degree (following less users) than human users. It is worth noting that while the bot accounts seem to mostly follow a power-law, the out-degree distribution for human accounts does not follow a power-law and many nodes in the dataset appear to have a surprisingly high out-degree that may not be perfectly representative of the general user population on Twitter. Further analysis shows that the clustering coefficient of both human and bot accounts appears to be rather low overall which can be explained to the lack of edges and paths that are not included due to the limitations of our crawl of the Twitter network (see figure~\ref{fig:centrality_clustering}). However, we find that the clustering coefficient of human accounts is still slightly higher than that of bot accounts. Regarding the eigenvector centrality we find that human accounts have a slightly higher value too (see also figure~\ref{fig:centrality_clustering}). We believe that these findings may be stronger in a more comprehensive dataset and warrants further investigation in future work.
+Given this data we perform some basic analysis. When plotting the in-degree-count and out-degree-count graphs we can easily see that bot users tend to have a lower in-degree (less followers) and also a lower out-degree (following less users) than human users. It is worth noting that while the bot accounts seem to mostly follow a power-law, the out-degree distribution for human accounts does not follow a power-law and many nodes in the dataset appear to have a surprisingly high out-degree that may not be perfectly representative of the general user population on Twitter.
+
+When plotting the frequency of favorite counts and status counts for human and bot accounts, we notice that their distributions differ greatly (figure \ref{fig:fav_status_counts}). While human accounts appear to follow a unimodal distribution that is greatly shifted towards zero, bots appear to follow a bimodal distribution and greatly outnumber human accounts in the ranges of their peaks. This clearly visible difference makes these features especially valuable for classification.
+
+Further analysis shows that the clustering coefficient of both human and bot accounts appears to be rather low overall which can be explained to the lack of edges and paths that are not included due to the limitations of our crawl of the Twitter network (see figure~\ref{fig:centrality_clustering}). However, we find that the clustering coefficient of human accounts is still slightly higher than that of bot accounts. Regarding the eigenvector centrality we find that human accounts have a slightly higher value too (see also figure~\ref{fig:centrality_clustering}). We believe that these findings may be stronger in a more comprehensive dataset and warrants further investigation in future work.
 
 % GENERAL DEGREE DISTRIBUTION
 \begin{figure}[t!]
@@ -68,6 +74,22 @@ Given this data we perform some basic analysis. When plotting the in-degree-coun
     \end{subfigure}
     \caption{Degree-count graphs for human and bot accounts}
     \label{fig:degrees}
+\end{figure}
+
+% FAVORITES AND STATUS COUNTS
+\begin{figure}[t]
+    \centering
+    \begin{subfigure}[t]{0.5\textwidth}
+        \includegraphics[width=\textwidth]{FIG/favourites_count-crop.pdf}
+        \caption{Favourites-count-frequency graph}
+    \end{subfigure}%
+    ~
+    \begin{subfigure}[t]{0.5\textwidth}
+        \includegraphics[width=\textwidth]{FIG/status_count-crop.pdf}
+        \caption{Status-count-frequency graph}
+    \end{subfigure}%
+    \caption{We find that the distributions of favourite counts and status counts among bot and human accounts vary greatly.}
+    \label{fig:fav_status_counts}
 \end{figure}
 
 % CENTRALITY AND CLUSTERING COEFFICIENT
@@ -88,28 +110,47 @@ Given this data we perform some basic analysis. When plotting the in-degree-coun
     \label{fig:centrality_clustering}
 \end{figure}
 
-% FAVORITES AND STATUS COUNTS
-\begin{figure}[t!]
-    \centering
-    \begin{subfigure}[t]{0.5\textwidth}
-        \includegraphics{Favorites-count graph}
-        \caption{Caption}
-    \end{subfigure}%
-    ~
-    \begin{subfigure}[t]{0.5\textwidth}
-        \includegraphics{}
-        \caption{Caption}
-    \end{subfigure}%
-    \caption{Caption}
-    \label{fig:my_label}
-\end{figure}
-
 \subsection{Neighborhood-based classification}
 \label{sec:approach}
 
 We introduce a novel graph topology and neighborhood-based approach to bot detection. Human and bot accounts typically differ in the way they use Twitter and as a result their structure in the social graph, or their ego graph, is typically different. Instead of classifying a node in the graph just by its immediate features (such as follower count, number of tweets, default profile image etc.) we propose to utilize the graph structure and the features of neighboring nodes in bot classification. We introduce an additional set of features computed as an aggregate over the entire set of predecessors and/or successors. 
 
-% REPUTATION
+\paragraph{Reputation.} A user's reputation is often measured as the following/follower ratio. We define the reputation $r$ of a user $u$ by
+\begin{align*}
+    r_u = \frac{ |u_\text{followers}| }{ |u_\text{followers}| + |u_\text{following}|}.
+\end{align*}
+
+\paragraph{Median indegree.} We compute median indegree of successors and the median indegree of predecessors. Intuitively, we believe humans tend to follow more high-indegree users (i.e.) news sites, celebrities, while being followed by other low-indegree users.
+
+\paragraph{Median outdegree.} We compute median outdegree of successors and the median outdegree of predecessors. The intuition is that bots may be more likely to be followed by bots or users that follow a large amount of people.
+
+\paragraph{Median reputation.} The above measure of reputation, that is $r_u = \frac{ |u_\text{followers}| }{ |u_\text{followers}| + |u_\text{following}|}$, aggregated for predecessors and successors in the social graph each. Intuitively, real accounts 
+
+\paragraph{Median status count.} Median of status updates for predecessors and successors in the social graph.
+
+\paragraph{Median favourites count.} Median number of favourites or likes by a user's predecessors and successors.
+
+\paragraph{Median listed count.} Median number of times a user's predecessors and successors appear in other users lists on Twitter.
+
+\paragraph{Median account age.} The median account age of predecessors and successors in the social graph. Intuitively, older accounts tend to be more likely to be real users whereas recently created accounts may be bot accounts.
+
+\paragraph{Number of egograph edges.} The total number of edges in a user's egograph. Used to measure how connected the egograph is.
+
+\paragraph{Number of egograph nodes.} The total number of nodes in a user's egograph. Used to measure how connected a user is in the social graph.
+
+\paragraph{Density.} The density of a user's egograph. A graph's density describes the number of edges in relation to the number of nodes. A complete graph has density 1 while a graph with an empty set of edges has density 0. For $n$ nodes and $m$ edges, it is computed as
+\begin{align*}
+    d_G = \frac{m}{n(n-1)}.
+\end{align*}
+
+\paragraph{Reciprocity.} We measure reciprocity in each user's egograph by computing the ratio of edges that are reciprocated (i.e. that point in both directions) to the total number of edges in the egograph. That is
+\begin{align*}
+   \mathrm{rec}_G = \frac{|\{(u,v) \ | \ (u,v) \in E \wedge (v,u) \in E \}|}{|\{ (u,v) \ | \ (u,v) \in E \}|}
+\end{align*}
+
+\paragraph{Assortativity.} A graph's assortativity measures the similarity of nodes in a graph given a certain attribute. In this case we choose to use ( indegree assortativity (i.e. follower assortativity) to describe how similar a user's egograph is in terms of indegrees.
+
+% REPUTATION PREDECESSORS SUCCESSORS
 \begin{figure}[t!]
     \centering
     \begin{subfigure}[t]{0.5\textwidth}
@@ -126,6 +167,8 @@ We introduce a novel graph topology and neighborhood-based approach to bot detec
     \caption{We compare the aggregated reputation of users following (predecessors) or followed by (successors) a given user over all human and bot accounts.}
     \label{fig:reputation}
 \end{figure}
+
+\bigskip
 
 We will first compute such aggregate features for the dataset using the social graph. In addition to the features scraped using the Twitter API, we computed and evaluated the following features during our analysis. An aggregate of a  feature for a user's neighborhood (a \emph{neighborhood feature}) can be computed by taking the median value across all predecessors or successors (see figure~\ref{fig:reputation}). An aggregate of this measure can be computed across all predecessors/successors by taking the median (see figure~\ref{fig:reputation}).
 
@@ -165,51 +208,25 @@ We will first compute such aggregate features for the dataset using the social g
     \label{fig:cum_degrees_successors}
 \end{figure}
 
-\paragraph{Reputation.} A user's reputation is often measured as the following/follower ratio. We define the reputation $r$ of a user $u$ by
-\begin{align*}
-    r_u = \frac{ |u_\text{followers}| }{ |u_\text{followers}| + |u_\text{following}|}.
-\end{align*}
-
-\paragraph{Median indegree.} We compute median indegree of successors and the median indegree of predecessors. Intuitively, we believe humans tend to follow more high-indegree users (i.e.) news sites, celebrities, while being followed by other low-indegree users.
-
-\paragraph{Median outdegree.} We compute median outdegree of successors and the median outdegree of predecessors. The intuition is that bots may be more likely to be followed by bots or users that follow a large amount of people.
-
-\paragraph{Median reputation.} The above measure of reputation, that is $r_u = \frac{ |u_\text{followers}| }{ |u_\text{followers}| + |u_\text{following}|}$, aggregated for predecessors and successors in the social graph each. Intuitively, real accounts 
-
-\paragraph{Median status count.} Median of status updates for predecessors and successors in the social graph.
-
-\paragraph{Median favourites count.} Median number of favourites or likes by a user's predecessors and successors.
-
-\paragraph{Median listed count.} Median number of times a user's predecessors and successors appear in other users lists on Twitter.
-
-\paragraph{Median account age.} The median account age of predecessors and successors in the social graph. Intuitively, older accounts tend to be more likely to be real users whereas recently created accounts may be bot accounts.
-
-\paragraph{Number of egograph edges.} The total number of edges in a user's egograph. Used to measure how connected the egograph is.
-
-\paragraph{Number of egograph nodes.} The total number of nodes in a user's egograph. Used to measure how connected a user is in the social graph.
-
-\paragraph{Density.} The density of a user's egograph. A graph's density describes the number of edges in relation to the number of nodes. A complete graph has density 1 while a graph with an empty set of edges has density 0. For $n$ nodes and $m$ edges, it is computed as
-\begin{align*}
-    d_G = \frac{m}{n(n-1)}.
-\end{align*}
-
-\paragraph{Reciprocity.} We measure reciprocity in each user's egograph by computing the ratio of edges that are reciprocated (i.e. that point in both directions) to the total number of edges in the egograph. That is
-\begin{align*}
-   \mathrm{rec}_G = \frac{|\{(u,v) \ | \ (u,v) \in E \wedge (v,u) \in E \}|}{|\{ (u,v) \ | \ (u,v) \in E \}|}
-\end{align*}
-
-\paragraph{Assortativity.} A graph's assortativity measures the similarity of nodes in a graph given a certain attribute. In this case we choose to use ( indegree assortativity (i.e. follower assortativity) to describe how similar a user's egograph is in terms of indegrees.
-
-
-\bigskip
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{FIG/feature_importance-crop.pdf}
+    \caption{Feature importance of all features, including neighborhood and egograph features, extracted from a random forest classifier trained on these features.}
+    \label{fig:importance}
+\end{figure}
 
 We find that overall successors appear to have a higher reputation than predecessors. This observation makes sense as many users follow high-degree, high-reputation nodes such as news sources, which in turn are not likely to be following them back. We can also make the observation that human nodes tend to have more reputable predecessors. Additionally, the distribution of reputation of successors is extremely skewed to both extremes for bots which indicates most of them they either follow very reputable nodes or nodes with very low reputation. While the distribution is also extreme for humans, it is not skewed quite as strongly and has many more nodes with a reputation $0.1 < r < 0.9$.
 
 When looking at the cumulative degree distribution among predecessors (figure~\ref{fig:cum_degrees_predecessors}) and successors (figure~\ref{fig:cum_degrees_successors}) we find that many bot accounts in the dataset have predecessors with very high in-degree and out-degree whereas most genuine accounts seem to have lower predecessor degree distributions. For successors however, human accounts tend to have successors with a higher in-degree and lower out-degree, which is in line with our observations regarding the reputation and again indicating that human users tend to follow more accounts with many followers such as news accounts or celebrities. 
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{FIG/feature_importance-crop.pdf}
-    \caption{Feature importance of all features, including neighborhood and egograph features}
-    \label{fig:importance}
-\end{figure}
+We analyze all features in terms of their correlation (see appendix \ref{fig:corr}) to find features that correlate strongly with the label and thus might be valuable for use with a classification algorithm while avoiding redundancies and features that have strong correlations to each other. Redundant features add noise to the data distribution and may make training a classifier harder and the end result less effective. Further, we analyze features in terms of their \emph{feature importance} in a classification algorithm. We train a random forest classifier on all of the features. Then, we can extract the feature importance in the classifier for the features (see figure \ref{fig:importance}). We focus on features that rank highly and experiment with different classification algorithms by adding and removing features and observing the change in the accuracy of predictions. We find that the most effective neighborhood and egograph features are:
+\begin{itemize}
+    \item median out-degree of predecessors
+    \item median favourites of predecessors
+    \item median status count of predecessors
+    \item median account age of predecessors
+    \item median favourites of successors
+    \item egograph density
+    \item egograph reciprocity
+\end{itemize}
+We find that neighborhood features based on the predecessors in the graph are more effective than those based on the successors in the graph. Intuitively this makes sense. Twitter users choose who they follow and can thus make features based on successors effectively useless by simply following users a genuine user would follow. It is much harder on the other hand to \emph{be followed} by users that seem genuine and have properties of human users.
