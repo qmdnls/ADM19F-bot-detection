@@ -12,7 +12,7 @@ Keywords: Fake account detection, social graph, network topology, neighborhood a
 
 ## Requirements
 
-Requires Python3 as well as a working installation of pip3 and venv for Python3 (on Ubuntu you can get this via "sudo apt install python3-venv"). Other requirements can be installed via the makefile.
+Requires Python3 as well as a working installation of pip3 and venv for Python3 (on Ubuntu you can get this via "sudo apt install python3-venv"). Other requirements can be installed via the makefile. On some systems it may be necessary to install tkinter to display matplotlib plots ("sudo apt install python3-tk" on Ubuntu).
 
 ## Building the project
 
